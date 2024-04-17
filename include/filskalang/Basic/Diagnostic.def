@@ -1,0 +1,14 @@
+/*
+  Source code in this file is inherited and modified from tinylang
+  https://github.com/PacktPublishing/Learn-LLVM-17/tree/main/Chapter05/tinylang
+  MIT License | Copyright (c) 2023 Packt
+  see https://opensource.org/licenses/MIT
+*/
+
+#ifndef DIAG
+#define DIAG(ID, Level, MSG)
+#endif
+
+DIAG(err_not_yet_implemented, Error, "module imports are not yet implemented")
+
+#undef DIAG

@@ -19,7 +19,7 @@ TOK(unknown)
 TOK(eof)
 TOK(identifier)
 TOK(integer_literal)
-TOK(register)
+TOK(register_name)
 TOK(test_flag)
 
 PUNCTUATOR(l_brace, "{")

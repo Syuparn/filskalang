@@ -17,7 +17,7 @@ $ apt install -y libllvm-18-ocaml-dev libllvm18 llvm-18 llvm-18-dev llvm-18-doc 
 # build
 
 ```bash
-$ cmake -G Ninja . -DLLVM_DIR=/lib/llvm-18/lib/cmake/llvm -DMLIR_DIR=/lib/llvm-18/lib/cmake/mlir
+$ cmake -G Ninja . -DLLVM_DIR=/lib/llvm-18/lib/cmake/llvm -DMLIR_DIR=/lib/llvm-18/lib/cmake/mlir -DCMAKE_C_COMPILER=clang 
 $ cmake --build .
 ```
 
