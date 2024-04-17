@@ -1,0 +1,2 @@
+create_subdirectory_options(FILSKALANG TOOL)
+add_filskalang_subdirectory(driver)

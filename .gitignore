@@ -1,0 +1,14 @@
+# build files
+CMakeFiles/
+build.ninja
+.ninja_log
+.ninja_deps
+cmake_install.cmake
+CMakeCache.txt
+
+*.a
+*.o
+*.s
+*.inc
+
+bin/filskalang

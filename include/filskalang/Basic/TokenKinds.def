@@ -1,0 +1,70 @@
+/*
+  Source code in this file is inherited and modified from tinylang
+  https://github.com/PacktPublishing/Learn-LLVM-17/tree/main/Chapter05/tinylang
+  MIT License | Copyright (c) 2023 Packt
+  see https://opensource.org/licenses/MIT
+*/
+
+#ifndef TOK
+#define TOK(ID)
+#endif
+#ifndef PUNCTUATOR
+#define PUNCTUATOR(ID, SP) TOK(ID)
+#endif
+#ifndef KEYWORD
+#define KEYWORD(ID, FLAG) TOK(kw_##ID)
+#endif
+
+TOK(unknown)
+TOK(eof)
+TOK(identifier)
+TOK(integer_literal)
+TOK(register)
+TOK(test_flag)
+
+PUNCTUATOR(l_brace, "{")
+PUNCTUATOR(r_brace, "}")
+PUNCTUATOR(equal, "=")
+PUNCTUATOR(comma, ",")
+
+KEYWORD(inc, KEYALL)
+KEYWORD(dec, KEYALL)
+KEYWORD(sin, KEYALL)
+KEYWORD(cos, KEYALL)
+KEYWORD(tan, KEYALL)
+KEYWORD(log, KEYALL)
+KEYWORD(exp, KEYALL)
+KEYWORD(flr, KEYALL)
+KEYWORD(cel, KEYALL)
+KEYWORD(rnd, KEYALL)
+KEYWORD(neg, KEYALL)
+KEYWORD(chr, KEYALL)
+KEYWORD(prt, KEYALL)
+KEYWORD(ipt, KEYALL)
+KEYWORD(sqr, KEYALL)
+KEYWORD(asn, KEYALL)
+KEYWORD(acs, KEYALL)
+KEYWORD(atn, KEYALL)
+KEYWORD(tmx, KEYALL)
+KEYWORD(tmy, KEYALL)
+KEYWORD(tmz, KEYALL)
+KEYWORD(txm, KEYALL)
+KEYWORD(tym, KEYALL)
+KEYWORD(tzm, KEYALL)
+KEYWORD(hlt, KEYALL)
+KEYWORD(set, KEYALL)
+KEYWORD(gto, KEYALL)
+KEYWORD(cmp, KEYALL)
+KEYWORD(add, KEYALL)
+KEYWORD(sub, KEYALL)
+KEYWORD(mul, KEYALL)
+KEYWORD(div, KEYALL)
+KEYWORD(mod, KEYALL)
+KEYWORD(pow, KEYALL)
+KEYWORD(swp, KEYALL)
+KEYWORD(jmp, KEYALL)
+KEYWORD(jpr, KEYALL)
+
+#undef KEYWORD
+#undef PUNCTUATOR
+#undef TOK
