@@ -18,7 +18,7 @@
 TOK(unknown)
 TOK(eof)
 TOK(identifier)
-TOK(integer_literal)
+TOK(number_literal)
 TOK(register_name)
 TOK(test_flag)
 
@@ -26,6 +26,7 @@ PUNCTUATOR(l_brace, "{")
 PUNCTUATOR(r_brace, "}")
 PUNCTUATOR(equal, "=")
 PUNCTUATOR(comma, ",")
+PUNCTUATOR(comment, "\"")
 
 KEYWORD(inc, KEYALL)
 KEYWORD(dec, KEYALL)
