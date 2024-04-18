@@ -101,8 +101,6 @@ void Lexer::identifier(Token &Result) {
 
 void Lexer::number(Token &Result) {
   const char *End = CurPtr + 1;
-  tok::TokenKind Kind = tok::unknown;
-  bool IsHex = false;
   while (*End) {
     if (!charinfo::isDigit(*End) && *End != '.') {
       break;

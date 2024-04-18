@@ -12,3 +12,5 @@ CMakeCache.txt
 *.inc
 
 bin/filskalang
+
+_deps
