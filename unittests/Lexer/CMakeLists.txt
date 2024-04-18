@@ -1,13 +1,15 @@
 enable_testing()
 
-add_executable(
-  Test
+add_filskalang_tool(Test
   LexerTest.cpp
-)
-target_link_libraries(
-  Test
+  )
+
+target_link_libraries(Test
+  PRIVATE
   GTest::gtest_main
-)
+  filskalangLexer
+  filskalangBasic
+  )
 
 include(GoogleTest)
 gtest_discover_tests(Test)

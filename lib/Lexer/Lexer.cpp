@@ -66,10 +66,6 @@ void Lexer::next(Token &Result) {
     number(Result);
     return;
   }
-  if (*CurPtr == '"' || *CurPtr == '\'') {
-    string(Result);
-    return;
-  }
   switch (*CurPtr) {
 #define CASE(ch, tok)                                                          \
   case ch:                                                                     \

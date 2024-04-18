@@ -27,3 +27,13 @@ $ cmake --build .
 $ ./bin/filskalang --version
 Filskalang 0.1
 ```
+
+# development
+
+## test
+
+```bash
+$ cmake -G Ninja . -DLLVM_DIR=/lib/llvm-18/lib/cmake/llvm -DMLIR_DIR=/lib/llvm-18/lib/cmake/mlir -DCMAKE_C_COMPILER=clang 
+$ cmake --build .
+$ ./run_tests.sh
+```
