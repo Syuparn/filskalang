@@ -1,5 +1,5 @@
 macro(add_filskalang_subdirectory name)
-  add_llvm_subdirectory(TINYLANG TOOL ${name})
+  add_llvm_subdirectory(FILSKALANG TOOL ${name})
 endmacro()
 
 macro(add_filskalang_library name)
