@@ -11,6 +11,13 @@ CMakeCache.txt
 *.s
 *.inc
 
+# binaries
 bin/filskalang
 
+# deps
 _deps
+
+# Google Test
+CTestTestfile.cmake
+Test\[*
+Test
