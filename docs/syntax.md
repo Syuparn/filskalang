@@ -7,8 +7,8 @@
 Syntax using [Wirth syntax notation](https://en.wikipedia.org/wiki/Wirth_syntax_notation):
 
 ```
-Syntax = { SubProgram } .
-SubProgram = "{" identifier { Instruction } "}" .
+Syntax = { Subprogram } .
+Subprogram = "{" identifier { Instruction } "}" .
 Instruction = NullaryInstruction | UnaryInstruction | BinaryInstruction | JumpInstruction | TestInstruction
 NullaryInstruction = nullary_operator
 UnaryInstruction = unary_operator "," int_literal
@@ -25,6 +25,7 @@ unary_operator = "set" | "gto" | "cmp"
 assignment_operator = "add" | "sub" | "mul" | "div" | "mod" | "pow"
 swap_operator = "swp"
 jump_operator = "jmp" | "jpr"
+test_operator = "tst"
 register = "x" | "y" | "z" | "m"
 test_flag = "z" | "e" | "l" | "g" | "n"
 ```
