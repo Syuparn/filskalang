@@ -1,6 +1,20 @@
 # filskalang
 a compiler for Filska language in "[Strange Code](https://github.com/rkneusel9/StrangeCodeBook/blob/master/chapter_12/filska.py)" powered by MLIR
 
+NOTE: This is under construction!
+
+# progress
+
+- [x] init project
+- [x] tokens
+- [ ] lexer
+- [ ] parser
+- [ ] evaluator (generate mlir)
+- [ ] filskalang dialect
+- [ ] lower to llir
+- [ ] connect to llvm backend
+- [ ] handle each operators
+
 # prepare
 
 ```bash
