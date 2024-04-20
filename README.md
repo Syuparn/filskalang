@@ -7,7 +7,7 @@ NOTE: This is under construction!
 
 - [x] init project
 - [x] tokens
-- [ ] lexer
+- [x] lexer
 - [ ] parser
 - [ ] evaluator (generate mlir)
 - [ ] filskalang dialect
