@@ -1,10 +1,10 @@
 enable_testing()
 
-add_filskalang_tool(Test
+add_filskalang_tool(lexer_test
   LexerTest.cpp
   )
 
-target_link_libraries(Test
+target_link_libraries(lexer_test
   PRIVATE
   GTest::gtest_main
   filskalangLexer
@@ -12,4 +12,4 @@ target_link_libraries(Test
   )
 
 include(GoogleTest)
-gtest_discover_tests(Test)
+gtest_discover_tests(lexer_test)

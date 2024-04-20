@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./bin/Test
+./bin/*_test
