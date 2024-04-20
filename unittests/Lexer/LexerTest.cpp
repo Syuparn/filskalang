@@ -4,7 +4,7 @@
 #include "filskalang/Lexer/Token.h"
 #include "llvm/ADT/StringRef.h"
 #include "gtest/gtest.h"
-#include <vector>
+#include "gtest/internal/gtest-port.h"
 
 filskalang::Lexer NewLexer(const char *Src) {
   llvm::SourceMgr SrcMgr;
@@ -12,6 +12,7 @@ filskalang::Lexer NewLexer(const char *Src) {
       llvm::MemoryBuffer::getMemBuffer(Src, "DummyBuffer");
   // NOTE: skip error check because it must not be occurred
   SrcMgr.AddNewSourceBuffer(std::move(*BufferOrErr), llvm::SMLoc());
+  std::printf("%d\n", SrcMgr.getNumBuffers());
 
   filskalang::DiagnosticsEngine Diags(SrcMgr);
 
@@ -20,14 +21,29 @@ filskalang::Lexer NewLexer(const char *Src) {
 
 template <unsigned long N>
 void RunTest(const char *Src,
-             std::array<filskalang::tok::TokenKind, N> ExpectedKinds) {
-  auto Lex = NewLexer(Src);
+             std::array<filskalang::tok::TokenKind, N> ExpectedKinds,
+             const char *ExpectedErr = "") {
+  // initialize Lexer
+  // (cannot separate to function because segmentation fault occurred in
+  // buffers...)
+  llvm::SourceMgr SrcMgr;
+  llvm::ErrorOr<std::unique_ptr<llvm::MemoryBuffer>> BufferOrErr =
+      llvm::MemoryBuffer::getMemBuffer(Src, "DummyBuffer");
+  // NOTE: skip error check because it must not be occurred
+  SrcMgr.AddNewSourceBuffer(std::move(*BufferOrErr), llvm::SMLoc());
+  filskalang::DiagnosticsEngine Diags(SrcMgr);
+
+  auto Lex = filskalang::Lexer(SrcMgr, Diags);
   filskalang::Token Actual;
 
+  testing::internal::CaptureStderr();
   for (auto Expected : ExpectedKinds) {
     Lex.next(Actual);
     EXPECT_EQ(Actual.getKind(), Expected);
   }
+
+  // check error message
+  ASSERT_STREQ(ExpectedErr, testing::internal::GetCapturedStderr().c_str());
 }
 
 TEST(LexerTest, Simple) {
@@ -204,6 +220,137 @@ TEST(LexerTest, MultipleInstructions) {
 
 // TODO: number(int, float)
 
+TEST(LexerTest, IntNumberLiteral) {
+  auto Src = "1";
+
+  std::array<filskalang::tok::TokenKind, 2> Expected = {
+      filskalang::tok::number_literal,
+      filskalang::tok::eof,
+  };
+
+  RunTest(Src, Expected);
+}
+
+TEST(LexerTest, FloatNumberLiteral) {
+  auto Src = "1.23";
+
+  std::array<filskalang::tok::TokenKind, 2> Expected = {
+      filskalang::tok::number_literal,
+      filskalang::tok::eof,
+  };
+
+  RunTest(Src, Expected);
+}
+
+TEST(LexerTest, IntWithExponentNumberLiteral) {
+  auto Src = R"(
+    1e+04
+    1e-04
+  )";
+
+  std::array<filskalang::tok::TokenKind, 3> Expected = {
+      filskalang::tok::number_literal,
+      filskalang::tok::number_literal,
+      filskalang::tok::eof,
+  };
+
+  RunTest(Src, Expected);
+}
+
+TEST(LexerTest, FloatWithExponentNumberLiteral) {
+  auto Src = R"(
+    1.23e+04
+    1.23e-04
+  )";
+
+  std::array<filskalang::tok::TokenKind, 3> Expected = {
+      filskalang::tok::number_literal,
+      filskalang::tok::number_literal,
+      filskalang::tok::eof,
+  };
+
+  RunTest(Src, Expected);
+}
+
+TEST(LexerTest, MinusNumberLiteral) {
+  auto Src = R"(
+    -1
+    -1.23
+    -1.23e+04
+    -1.23e-04
+  )";
+
+  std::array<filskalang::tok::TokenKind, 5> Expected = {
+      filskalang::tok::number_literal,
+      filskalang::tok::number_literal,
+      filskalang::tok::number_literal,
+      filskalang::tok::number_literal,
+      filskalang::tok::eof,
+  };
+
+  RunTest(Src, Expected);
+}
+
+TEST(LexerTest, InvalidNumberLiteralWithDots) {
+  auto Src = "1.2.3";
+
+  std::array<filskalang::tok::TokenKind, 1> Expected = {
+      filskalang::tok::number_literal};
+
+  auto Err = "DummyBuffer:1:1: error: number literal must be int, float, or "
+             "float with exponent\n1.2.3\n^\n";
+
+  RunTest(Src, Expected, Err);
+}
+
+TEST(LexerTest, InvalidNumberLiteralWithEs) {
+  auto Src = "1.2ee+01";
+
+  std::array<filskalang::tok::TokenKind, 1> Expected = {
+      filskalang::tok::number_literal};
+
+  auto Err = "DummyBuffer:1:1: error: number literal must be int, float, or "
+             "float with exponent\n1.2ee+01\n^\n";
+
+  RunTest(Src, Expected, Err);
+}
+
+TEST(LexerTest, InvalidNumberLiteralWithoutSign) {
+  auto Src = "1.2e01";
+
+  std::array<filskalang::tok::TokenKind, 1> Expected = {
+      filskalang::tok::number_literal};
+
+  auto Err = "DummyBuffer:1:1: error: number literal must be int, float, or "
+             "float with exponent\n1.2e01\n^\n";
+
+  RunTest(Src, Expected, Err);
+}
+
+TEST(LexerTest, InvalidNumberLiteralWithDotInExponent) {
+  auto Src = "1.2e+01.2";
+
+  std::array<filskalang::tok::TokenKind, 1> Expected = {
+      filskalang::tok::number_literal};
+
+  auto Err = "DummyBuffer:1:1: error: number literal must be int, float, or "
+             "float with exponent\n1.2e+01.2\n^\n";
+
+  RunTest(Src, Expected, Err);
+}
+
+TEST(LexerTest, InvalidNumberLiteralWithDotInExponentAfterInt) {
+  auto Src = "1e+01.2";
+
+  std::array<filskalang::tok::TokenKind, 1> Expected = {
+      filskalang::tok::number_literal};
+
+  auto Err = "DummyBuffer:1:1: error: number literal must be int, float, or "
+             "float with exponent\n1e+01.2\n^\n";
+
+  RunTest(Src, Expected, Err);
+}
+
 TEST(LexerTest, Keywords) {
   // NOTE: for ease of testing, invalid syntax is used here
   auto Src = R"(
@@ -307,3 +454,5 @@ TEST(LexerTest, MultipleSubprograms) {
 
   RunTest(Src, Expected);
 }
+
+// TODO: unknown

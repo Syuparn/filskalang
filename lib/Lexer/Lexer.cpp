@@ -6,6 +6,8 @@
 */
 
 #include "filskalang/Lexer/Lexer.h"
+#include "filskalang/Basic/Diagnostic.h"
+#include <cstdio>
 
 using namespace filskalang;
 
@@ -62,7 +64,7 @@ void Lexer::next(Token &Result) {
     identifier(Result);
     return;
   }
-  if (charinfo::isDigit(*CurPtr)) {
+  if (charinfo::isDigit(*CurPtr) || *CurPtr == '-') {
     number(Result);
     return;
   }
@@ -97,11 +99,37 @@ void Lexer::identifier(Token &Result) {
 
 void Lexer::number(Token &Result) {
   const char *End = CurPtr + 1;
-  while (*End) {
-    if (!charinfo::isDigit(*End) && *End != '.') {
-      break;
+  bool IsFloat = false;
+  bool IsExponent = false;
+
+  // peek following characters after the first one
+  // NOTE: we don't have to check signs because it only appears at first
+  for (; *End; End++) {
+    if (charinfo::isDigit(*End)) {
+      continue;
     }
-    ++End;
+
+    if (*End == '.') {
+      if (!IsFloat && !IsExponent) {
+        IsFloat = true;
+        continue;
+      }
+      Diags.report(getLoc(), diag::err_invalid_number_token);
+    }
+
+    if (*End == 'e') {
+      if (!IsExponent) {
+        IsExponent = true;
+        End++;
+        if (*End == '+' || *End == '-') {
+          continue;
+        }
+      }
+      Diags.report(getLoc(), diag::err_invalid_number_token);
+    }
+
+    // number ends
+    break;
   }
   formToken(Result, End, tok::number_literal);
 }

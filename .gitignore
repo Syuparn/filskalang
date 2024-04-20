@@ -21,3 +21,6 @@ _deps
 CTestTestfile.cmake
 Test\[*
 Test
+
+# core dump
+core

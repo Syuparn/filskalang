@@ -47,7 +47,8 @@ Filskalang 0.1
 ## test
 
 ```bash
-$ cmake -G Ninja . -DLLVM_DIR=/lib/llvm-18/lib/cmake/llvm -DMLIR_DIR=/lib/llvm-18/lib/cmake/mlir -DCMAKE_C_COMPILER=clang 
+# set CMAKE_BUILD_TYPE=DEBUG for core dump
+$ cmake -G Ninja . -DLLVM_DIR=/lib/llvm-18/lib/cmake/llvm -DMLIR_DIR=/lib/llvm-18/lib/cmake/mlir -DCMAKE_C_COMPILER=clang -DCMAKE_BUILD_TYPE=DEBUG
 $ cmake --build .
 $ ./run_tests.sh
 ```
