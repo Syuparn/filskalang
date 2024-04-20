@@ -12,5 +12,6 @@
 DIAG(err_invalid_number_token, Error, "number literal must be int, float, or float with exponent")
 
 DIAG(err_not_yet_implemented, Error, "module imports are not yet implemented")
+DIAG(err_unknown_token, Error, "unknown token is found")
 
 #undef DIAG

@@ -83,7 +83,8 @@ void Lexer::next(Token &Result) {
     next(Result);
     break;
   default:
-    Result.setKind(tok::unknown);
+    Diags.report(getLoc(), diag::err_unknown_token);
+    formToken(Result, CurPtr + 1, tok::unknown);
   }
   return;
 }

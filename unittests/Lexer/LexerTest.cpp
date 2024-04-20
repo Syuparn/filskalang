@@ -218,8 +218,6 @@ TEST(LexerTest, MultipleInstructions) {
   RunTest(Src, Expected);
 }
 
-// TODO: number(int, float)
-
 TEST(LexerTest, IntNumberLiteral) {
   auto Src = "1";
 
@@ -455,4 +453,15 @@ TEST(LexerTest, MultipleSubprograms) {
   RunTest(Src, Expected);
 }
 
-// TODO: unknown
+TEST(LexerTest, Unknown) {
+  auto Src = "foo !";
+
+  std::array<filskalang::tok::TokenKind, 2> Expected = {
+      filskalang::tok::identifier,
+      filskalang::tok::unknown,
+  };
+
+  auto Err = "DummyBuffer:1:5: error: unknown token is found\nfoo !\n    ^\n";
+
+  RunTest(Src, Expected, Err);
+}
