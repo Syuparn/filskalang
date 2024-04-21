@@ -9,9 +9,11 @@
 #define DIAG(ID, Level, MSG)
 #endif
 
+DIAG(err_expected, Error, "expected {0} but found {1}")
 DIAG(err_invalid_number_token, Error, "number literal must be int, float, or float with exponent")
 
 DIAG(err_not_yet_implemented, Error, "module imports are not yet implemented")
+DIAG(err_unexpected, Error, "unexpected error occurred (may be a compiler bug)")
 DIAG(err_unknown_token, Error, "unknown token is found")
 
 #undef DIAG

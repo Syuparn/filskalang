@@ -11,10 +11,10 @@ Syntax = { Subprogram } .
 Subprogram = "{" identifier { Instruction } "}" .
 Instruction = NullaryInstruction | UnaryInstruction | BinaryInstruction | JumpInstruction | TestInstruction
 NullaryInstruction = nullary_operator
-UnaryInstruction = unary_operator "," int_literal
+UnaryInstruction = unary_operator "," number_literal
 BinaryInstruction = AssignmentInstruction | SwapInstruction
 JumpInstruction = jump_operator "," identifier
-TestInstruction = test_operator "," test_flag "," int_literal
+TestInstruction = test_operator "," test_flag "," number_literal
 AssignmentInstruction = assignment_operator "," Assignment
 Assignment = register "=" register register
 SwapInstruction = swap_operator "," register register
