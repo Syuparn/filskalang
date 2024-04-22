@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 3.20.0)
 set(CMAKE_CXX_STANDARD 17)
+set(LLVM_DIR /lib/llvm-18/lib/cmake/llvm)
+set(MLIR_DIR /lib/llvm-18/lib/cmake/mlir)
+set(CMAKE_C_COMPILER clang)
+
+# generate compile_commands.json for VSCode intellisense
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # config to fetch googletest
 if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
@@ -48,6 +54,7 @@ include_directories(BEFORE
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   )
 
+add_subdirectory(include)
 add_subdirectory(lib)
 add_subdirectory(tools)
 

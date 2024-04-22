@@ -1,0 +1,74 @@
+[
+{
+  "directory": "/home/syuparn/filskalang",
+  "command": "/usr/local/bin/clang++ -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/syuparn/filskalang/include -I/usr/lib/llvm-18/include  -fPIC -fno-semantic-interposition -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -Wctad-maybe-unsupported -fdiagnostics-color -g -std=gnu++17   -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS  -fno-exceptions -funwind-tables -o lib/Basic/CMakeFiles/filskalangBasic.dir/Diagnostic.cpp.o -c /home/syuparn/filskalang/lib/Basic/Diagnostic.cpp",
+  "file": "/home/syuparn/filskalang/lib/Basic/Diagnostic.cpp",
+  "output": "lib/Basic/CMakeFiles/filskalangBasic.dir/Diagnostic.cpp.o"
+},
+{
+  "directory": "/home/syuparn/filskalang",
+  "command": "/usr/local/bin/clang++ -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/syuparn/filskalang/include -I/usr/lib/llvm-18/include  -fPIC -fno-semantic-interposition -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -Wctad-maybe-unsupported -fdiagnostics-color -g -std=gnu++17   -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS  -fno-exceptions -funwind-tables -o lib/Basic/CMakeFiles/filskalangBasic.dir/TokenKinds.cpp.o -c /home/syuparn/filskalang/lib/Basic/TokenKinds.cpp",
+  "file": "/home/syuparn/filskalang/lib/Basic/TokenKinds.cpp",
+  "output": "lib/Basic/CMakeFiles/filskalangBasic.dir/TokenKinds.cpp.o"
+},
+{
+  "directory": "/home/syuparn/filskalang",
+  "command": "/usr/local/bin/clang++ -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/syuparn/filskalang/include -I/usr/lib/llvm-18/include  -fPIC -fno-semantic-interposition -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -Wctad-maybe-unsupported -fdiagnostics-color -g -std=gnu++17   -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS  -fno-exceptions -funwind-tables -o lib/Basic/CMakeFiles/filskalangBasic.dir/Version.cpp.o -c /home/syuparn/filskalang/lib/Basic/Version.cpp",
+  "file": "/home/syuparn/filskalang/lib/Basic/Version.cpp",
+  "output": "lib/Basic/CMakeFiles/filskalangBasic.dir/Version.cpp.o"
+},
+{
+  "directory": "/home/syuparn/filskalang",
+  "command": "/usr/local/bin/clang++ -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/syuparn/filskalang/include -I/usr/lib/llvm-18/include  -fPIC -fno-semantic-interposition -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -Wctad-maybe-unsupported -fdiagnostics-color -g -std=gnu++17   -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS  -fno-exceptions -funwind-tables -o lib/Lexer/CMakeFiles/filskalangLexer.dir/Lexer.cpp.o -c /home/syuparn/filskalang/lib/Lexer/Lexer.cpp",
+  "file": "/home/syuparn/filskalang/lib/Lexer/Lexer.cpp",
+  "output": "lib/Lexer/CMakeFiles/filskalangLexer.dir/Lexer.cpp.o"
+},
+{
+  "directory": "/home/syuparn/filskalang",
+  "command": "/usr/local/bin/clang++ -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/syuparn/filskalang/include -I/usr/lib/llvm-18/include  -fPIC -fno-semantic-interposition -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -Wctad-maybe-unsupported -fdiagnostics-color -g -std=gnu++17   -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS  -fno-exceptions -funwind-tables -o lib/Parser/CMakeFiles/filskalangParser.dir/Parser.cpp.o -c /home/syuparn/filskalang/lib/Parser/Parser.cpp",
+  "file": "/home/syuparn/filskalang/lib/Parser/Parser.cpp",
+  "output": "lib/Parser/CMakeFiles/filskalangParser.dir/Parser.cpp.o"
+},
+{
+  "directory": "/home/syuparn/filskalang",
+  "command": "/usr/local/bin/clang++ -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/syuparn/filskalang/include -I/usr/lib/llvm-18/include  -fPIC -fno-semantic-interposition -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -Wctad-maybe-unsupported -fdiagnostics-color -g -std=gnu++17   -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS  -fno-exceptions -funwind-tables -o lib/Sema/CMakeFiles/filskalangSema.dir/Sema.cpp.o -c /home/syuparn/filskalang/lib/Sema/Sema.cpp",
+  "file": "/home/syuparn/filskalang/lib/Sema/Sema.cpp",
+  "output": "lib/Sema/CMakeFiles/filskalangSema.dir/Sema.cpp.o"
+},
+{
+  "directory": "/home/syuparn/filskalang",
+  "command": "/usr/local/bin/clang++ -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/syuparn/filskalang/include -I/usr/lib/llvm-18/include  -fPIC -fno-semantic-interposition -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -Wctad-maybe-unsupported -fdiagnostics-color -g -std=gnu++17   -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS  -fno-exceptions -funwind-tables -o tools/driver/CMakeFiles/filskalang.dir/Driver.cpp.o -c /home/syuparn/filskalang/tools/driver/Driver.cpp",
+  "file": "/home/syuparn/filskalang/tools/driver/Driver.cpp",
+  "output": "tools/driver/CMakeFiles/filskalang.dir/Driver.cpp.o"
+},
+{
+  "directory": "/home/syuparn/filskalang",
+  "command": "/usr/local/bin/clang++ -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/syuparn/filskalang/include -I/usr/lib/llvm-18/include -I/home/syuparn/filskalang/_deps/googletest-src/googlemock/include -I/home/syuparn/filskalang/_deps/googletest-src/googlemock -isystem /home/syuparn/filskalang/_deps/googletest-src/googletest/include -isystem /home/syuparn/filskalang/_deps/googletest-src/googletest  -fPIC -fno-semantic-interposition -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -Wctad-maybe-unsupported -fdiagnostics-color -g -std=c++17   -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wshadow -Wconversion -DGTEST_HAS_PTHREAD=1 -fexceptions -W -Wpointer-arith -Wreturn-type -Wcast-qual -Wwrite-strings -Wswitch -Wunused-parameter -Wcast-align -Wchar-subscripts -Winline -Wredundant-decls -o _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o -c /home/syuparn/filskalang/_deps/googletest-src/googlemock/src/gmock-all.cc",
+  "file": "/home/syuparn/filskalang/_deps/googletest-src/googlemock/src/gmock-all.cc",
+  "output": "_deps/googletest-build/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o"
+},
+{
+  "directory": "/home/syuparn/filskalang",
+  "command": "/usr/local/bin/clang++ -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/syuparn/filskalang/include -I/usr/lib/llvm-18/include -isystem /home/syuparn/filskalang/_deps/googletest-src/googlemock/include -isystem /home/syuparn/filskalang/_deps/googletest-src/googlemock -isystem /home/syuparn/filskalang/_deps/googletest-src/googletest/include -isystem /home/syuparn/filskalang/_deps/googletest-src/googletest  -fPIC -fno-semantic-interposition -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -Wctad-maybe-unsupported -fdiagnostics-color -g -std=c++17   -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wshadow -Wconversion -DGTEST_HAS_PTHREAD=1 -fexceptions -W -Wpointer-arith -Wreturn-type -Wcast-qual -Wwrite-strings -Wswitch -Wunused-parameter -Wcast-align -Wchar-subscripts -Winline -Wredundant-decls -o _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.o -c /home/syuparn/filskalang/_deps/googletest-src/googlemock/src/gmock_main.cc",
+  "file": "/home/syuparn/filskalang/_deps/googletest-src/googlemock/src/gmock_main.cc",
+  "output": "_deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.o"
+},
+{
+  "directory": "/home/syuparn/filskalang",
+  "command": "/usr/local/bin/clang++ -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/syuparn/filskalang/include -I/usr/lib/llvm-18/include -I/home/syuparn/filskalang/_deps/googletest-src/googletest/include -I/home/syuparn/filskalang/_deps/googletest-src/googletest  -fPIC -fno-semantic-interposition -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -Wctad-maybe-unsupported -fdiagnostics-color -g -std=c++17   -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wshadow -Wconversion -DGTEST_HAS_PTHREAD=1 -fexceptions -W -Wpointer-arith -Wreturn-type -Wcast-qual -Wwrite-strings -Wswitch -Wunused-parameter -Wcast-align -Wchar-subscripts -Winline -Wredundant-decls -o _deps/googletest-build/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.o -c /home/syuparn/filskalang/_deps/googletest-src/googletest/src/gtest-all.cc",
+  "file": "/home/syuparn/filskalang/_deps/googletest-src/googletest/src/gtest-all.cc",
+  "output": "_deps/googletest-build/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.o"
+},
+{
+  "directory": "/home/syuparn/filskalang",
+  "command": "/usr/local/bin/clang++ -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/syuparn/filskalang/include -I/usr/lib/llvm-18/include -isystem /home/syuparn/filskalang/_deps/googletest-src/googletest/include -isystem /home/syuparn/filskalang/_deps/googletest-src/googletest  -fPIC -fno-semantic-interposition -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -Wctad-maybe-unsupported -fdiagnostics-color -g -std=c++17   -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wshadow -Wconversion -DGTEST_HAS_PTHREAD=1 -fexceptions -W -Wpointer-arith -Wreturn-type -Wcast-qual -Wwrite-strings -Wswitch -Wunused-parameter -Wcast-align -Wchar-subscripts -Winline -Wredundant-decls -o _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o -c /home/syuparn/filskalang/_deps/googletest-src/googletest/src/gtest_main.cc",
+  "file": "/home/syuparn/filskalang/_deps/googletest-src/googletest/src/gtest_main.cc",
+  "output": "_deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o"
+},
+{
+  "directory": "/home/syuparn/filskalang",
+  "command": "/usr/local/bin/clang++ -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/syuparn/filskalang/include -I/usr/lib/llvm-18/include -isystem /home/syuparn/filskalang/_deps/googletest-src/googletest/include -isystem /home/syuparn/filskalang/_deps/googletest-src/googletest  -fPIC -fno-semantic-interposition -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -Wctad-maybe-unsupported -fdiagnostics-color -g -std=gnu++17   -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS  -fno-exceptions -funwind-tables -o unittests/Lexer/CMakeFiles/lexer_test.dir/LexerTest.cpp.o -c /home/syuparn/filskalang/unittests/Lexer/LexerTest.cpp",
+  "file": "/home/syuparn/filskalang/unittests/Lexer/LexerTest.cpp",
+  "output": "unittests/Lexer/CMakeFiles/lexer_test.dir/LexerTest.cpp.o"
+}
+]

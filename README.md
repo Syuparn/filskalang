@@ -1,5 +1,5 @@
 # filskalang
-a compiler for Filska language in "[Strange Code](https://github.com/rkneusel9/StrangeCodeBook/blob/master/chapter_12/filska.py)" powered by MLIR
+a compiler for Filska language in "[Strange Code: Esoteric Languages That Make Programming Fun Again](https://github.com/rkneusel9/StrangeCodeBook/blob/master/chapter_12/filska.py)" powered by MLIR
 
 NOTE: This is under construction!
 
@@ -31,7 +31,7 @@ $ apt install -y libllvm-18-ocaml-dev libllvm18 llvm-18 llvm-18-dev llvm-18-doc 
 # build
 
 ```bash
-$ cmake -G Ninja . -DLLVM_DIR=/lib/llvm-18/lib/cmake/llvm -DMLIR_DIR=/lib/llvm-18/lib/cmake/mlir -DCMAKE_C_COMPILER=clang 
+$ cmake -G Ninja .
 $ cmake --build .
 ```
 
@@ -48,7 +48,7 @@ Filskalang 0.1
 
 ```bash
 # set CMAKE_BUILD_TYPE=DEBUG for core dump
-$ cmake -G Ninja . -DLLVM_DIR=/lib/llvm-18/lib/cmake/llvm -DMLIR_DIR=/lib/llvm-18/lib/cmake/mlir -DCMAKE_C_COMPILER=clang -DCMAKE_BUILD_TYPE=DEBUG
+$ cmake -G Ninja . -DCMAKE_BUILD_TYPE=DEBUG
 $ cmake --build .
 $ ./run_tests.sh
 ```

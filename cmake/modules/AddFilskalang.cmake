@@ -10,7 +10,34 @@ macro(add_filskalang_library name)
   endif()
   llvm_add_library(${name} ${LIBTYPE} ${ARGN})
   if(TARGET ${name})
-    target_link_libraries(${name} INTERFACE ${LLVM_COMMON_LIBS})
+    get_property(dialect_libs GLOBAL PROPERTY MLIR_DIALECT_LIBS)
+    get_property(conversion_libs GLOBAL PROPERTY MLIR_CONVERSION_LIBS)
+
+    set(LIBS
+      ${dialect_libs}
+      ${conversion_libs}
+      MLIRAnalysis
+      MLIRCallInterfaces
+      MLIRCastInterfaces
+      MLIRExecutionEngine
+      MLIRIR
+      MLIRLLVMCommonConversion
+      MLIRLLVMToLLVMIRTranslation
+      MLIRMemRefDialect
+      MLIRLLVMDialect
+      MLIRParser
+      MLIRPass
+      MLIRSideEffectInterfaces
+      MLIRSupport
+      MLIRTargetLLVMIRExport
+      MLIRTransforms
+      MLIROptLib
+      )
+
+    target_link_libraries(${name} INTERFACE
+      ${LLVM_COMMON_LIBS}
+      ${LIBS})
+
     install(TARGETS ${name}
       COMPONENT ${name}
       LIBRARY DESTINATION lib${LLVM_LIBDIR_SUFFIX}
