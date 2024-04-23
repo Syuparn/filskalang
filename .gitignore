@@ -27,3 +27,7 @@ Test
 
 # core dump
 core
+
+# TableGen
+tablegen_compile_commands.yml
+*.inc.d

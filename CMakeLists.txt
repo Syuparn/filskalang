@@ -49,15 +49,23 @@ configure_file(
 
 include(AddFilskalang)
 
+# generate files from TableGen
+# TODO: move below settings to CodeGen directory
+add_mlir_dialect(FilskalangOps filskalang)
+set(LLVM_TARGET_DEFINITIONS ${CMAKE_CURRENT_SOURCE_DIR}/include/filskalang/CodeGen/Ops.td)
+mlir_tablegen(include/filskalang/CodeGen/Ops.h.inc -gen-op-decls)
+mlir_tablegen(include/filskalang/CodeGen/Ops.cpp.inc -gen-op-defs)
+mlir_tablegen(include/filskalang/CodeGen/Dialect.h.inc -gen-dialect-decls)
+mlir_tablegen(include/filskalang/CodeGen/Dialect.cpp.inc -gen-dialect-defs)
+add_public_tablegen_target(FilskalangOpsIncGen)
+
 include_directories(BEFORE
   ${CMAKE_CURRENT_BINARY_DIR}/include
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   )
 
-add_subdirectory(include)
 add_subdirectory(lib)
 add_subdirectory(tools)
-
 
 include(FetchContent)
 FetchContent_Declare(

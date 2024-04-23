@@ -8,4 +8,8 @@ add_filskalang_tool(filskalang
 target_link_libraries(filskalang
   PRIVATE
   filskalangBasic
+  filskalangLexer
+  filskalangParser
+  filskalangSema
+  filskalangCodeGen
   )

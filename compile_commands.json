@@ -37,6 +37,18 @@
 },
 {
   "directory": "/home/syuparn/filskalang",
+  "command": "/usr/local/bin/clang++ -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/syuparn/filskalang/include -I/usr/lib/llvm-18/include  -fPIC -fno-semantic-interposition -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -Wctad-maybe-unsupported -fdiagnostics-color -g -std=gnu++17   -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS  -fno-exceptions -funwind-tables -o lib/CodeGen/CMakeFiles/filskalangCodeGen.dir/Dialect.cpp.o -c /home/syuparn/filskalang/lib/CodeGen/Dialect.cpp",
+  "file": "/home/syuparn/filskalang/lib/CodeGen/Dialect.cpp",
+  "output": "lib/CodeGen/CMakeFiles/filskalangCodeGen.dir/Dialect.cpp.o"
+},
+{
+  "directory": "/home/syuparn/filskalang",
+  "command": "/usr/local/bin/clang++ -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/syuparn/filskalang/include -I/usr/lib/llvm-18/include  -fPIC -fno-semantic-interposition -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -Wctad-maybe-unsupported -fdiagnostics-color -g -std=gnu++17   -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS  -fno-exceptions -funwind-tables -o lib/CodeGen/CMakeFiles/filskalangCodeGen.dir/MLIRGen.cpp.o -c /home/syuparn/filskalang/lib/CodeGen/MLIRGen.cpp",
+  "file": "/home/syuparn/filskalang/lib/CodeGen/MLIRGen.cpp",
+  "output": "lib/CodeGen/CMakeFiles/filskalangCodeGen.dir/MLIRGen.cpp.o"
+},
+{
+  "directory": "/home/syuparn/filskalang",
   "command": "/usr/local/bin/clang++ -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/syuparn/filskalang/include -I/usr/lib/llvm-18/include  -fPIC -fno-semantic-interposition -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -Wctad-maybe-unsupported -fdiagnostics-color -g -std=gnu++17   -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS  -fno-exceptions -funwind-tables -o tools/driver/CMakeFiles/filskalang.dir/Driver.cpp.o -c /home/syuparn/filskalang/tools/driver/Driver.cpp",
   "file": "/home/syuparn/filskalang/tools/driver/Driver.cpp",
   "output": "tools/driver/CMakeFiles/filskalang.dir/Driver.cpp.o"

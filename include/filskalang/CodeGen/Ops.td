@@ -1,6 +1,11 @@
 #ifndef FILSKALANG_OPS
 #define FILSKALANG_OPS
 
+include "mlir/IR/OpBase.td"
+include "mlir/Interfaces/FunctionInterfaces.td"
+include "mlir/IR/SymbolInterfaces.td"
+include "mlir/Interfaces/SideEffectInterfaces.td"
+
 def Filskalang_Dialect : Dialect {
   let name = "filskalang";
 
@@ -17,5 +22,9 @@ def Filskalang_Dialect : Dialect {
   // The C++ namespace that the dialect class definition resides in.
   let cppNamespace = "filskalang";
 }
+
+// Base class for filskalang dialect operations.
+class Filskalang_Op<string mnemonic, list<Trait> traits = []> :
+    Op<Filskalang_Dialect, mnemonic, traits>;
 
 #endif

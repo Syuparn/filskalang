@@ -18,9 +18,9 @@ class Sema {
   DiagnosticsEngine &Diags;
 
 public:
-  Sema(DiagnosticsEngine &Diags) : Diags(Diags) { initialize(); }
+  Sema(DiagnosticsEngine &Diags) : Diags(Diags) { initialize(Diags); }
 
-  void initialize();
+  void initialize(filskalang::DiagnosticsEngine &Diags);
 
   Program *actOnProgram(llvm::SMLoc Loc,
                         std::vector<Subprogram *> &Subprograms);

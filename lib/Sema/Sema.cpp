@@ -8,11 +8,11 @@
 #include "filskalang/Sema/Sema.h"
 #include "filskalang/AST/AST.h"
 #include "filskalang/Basic/TokenKinds.h"
-#include <llvm/ADT/APFloat.h>
+#include "llvm/ADT/APFloat.h"
 
 using namespace filskalang;
 
-void Sema::initialize() {}
+void Sema::initialize(filskalang::DiagnosticsEngine &) {}
 
 Program *Sema::actOnProgram(llvm::SMLoc Loc,
                             std::vector<Subprogram *> &Subprograms) {
