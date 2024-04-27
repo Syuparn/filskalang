@@ -24,6 +24,13 @@
 
 using namespace filskalang;
 
+namespace {
+enum Action { None, EmitMLIR };
+static llvm::cl::opt<enum Action> EmitAction(
+    "emit", llvm::cl::desc("Select the kind of output desired"),
+    llvm::cl::values(clEnumValN(EmitMLIR, "mlir", "output the MLIR")));
+} // namespace
+
 static llvm::cl::opt<std::string> InputFile(llvm::cl::Positional,
                                             llvm::cl::desc("<input-files>"),
                                             llvm::cl::init("-"));
@@ -75,6 +82,11 @@ int main(int Argc, const char **Argv) {
     return 1;
   }
 
-  module->dump();
-  return 0;
+  // only emit MLIR
+  if (EmitAction == EmitMLIR) {
+    module->dump();
+    return 0;
+  }
+
+  // TODO: lower to llvm
 }

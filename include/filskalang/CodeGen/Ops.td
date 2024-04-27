@@ -27,4 +27,15 @@ def Filskalang_Dialect : Dialect {
 class Filskalang_Op<string mnemonic, list<Trait> traits = []> :
     Op<Filskalang_Dialect, mnemonic, traits>;
 
+def PrtOp : Filskalang_Op<"prt"> {
+  let summary = "print operation";
+  let description = [{
+    The "prt" builtin operation corresponds to "prt" instruction
+  }];
+
+  let arguments = (ins F64:$input);
+
+  let assemblyFormat = "$input attr-dict `:` type($input)";
+}
+
 #endif
