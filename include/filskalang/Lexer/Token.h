@@ -9,6 +9,7 @@
 #define FILSKALANG_LEXER_TOKEN_H
 
 #include "filskalang/Basic/TokenKinds.h"
+#include "mlir/Support/LLVM.h"
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Support/SMLoc.h"
 #include <cassert>
@@ -30,7 +31,7 @@ public:
   size_t getLength() const { return Length; }
 
   // source position
-  llvm::SMLoc getLocation() const { return llvm::SMLoc::getFromPointer(Ptr); }
+  mlir::SMLoc getLocation() const { return mlir::SMLoc::getFromPointer(Ptr); }
 
   llvm::StringRef getIdentifier() {
     assert(is(tok::identifier) && "Cannot get identifier of non-identifier");

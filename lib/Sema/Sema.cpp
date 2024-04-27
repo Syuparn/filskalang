@@ -14,29 +14,30 @@ using namespace filskalang;
 
 void Sema::initialize(filskalang::DiagnosticsEngine &) {}
 
-Program *Sema::actOnProgram(llvm::SMLoc Loc,
-                            std::vector<Subprogram *> &Subprograms) {
+ast::Program *Sema::actOnProgram(mlir::SMLoc Loc,
+                                 std::vector<ast::Subprogram *> &Subprograms) {
   // TODO: validate
 
-  return new Program(Loc, Subprograms);
+  return new ast::Program(Loc, Subprograms);
 }
 
-void Sema::actOnSubprogram(llvm::SMLoc Loc, llvm::StringRef Name,
-                           std::vector<Instruction *> &Instructions,
-                           std::vector<Subprogram *> &Subprograms) {
+void Sema::actOnSubprogram(mlir::SMLoc Loc, llvm::StringRef Name,
+                           std::vector<ast::Instruction *> &Instructions,
+                           std::vector<ast::Subprogram *> &Subprograms) {
   // TODO: validate
-  Subprogram *Sub = new Subprogram(Loc, Name, Instructions);
+  ast::Subprogram *Sub = new ast::Subprogram(Loc, Name, Instructions);
   Subprograms.push_back(Sub);
 }
 
-void Sema::actOnNullaryInstruction(llvm::SMLoc Loc, tok::TokenKind OperatorKind,
-                                   std::vector<Instruction *> &Instructions) {
+void Sema::actOnNullaryInstruction(
+    mlir::SMLoc Loc, tok::TokenKind OperatorKind,
+    std::vector<ast::Instruction *> &Instructions) {
   // TODO: validate
 
-  NullaryInstruction::NullaryOperator Op;
+  ast::NullaryInstruction::NullaryOperator Op;
   switch (OperatorKind) {
   case tok::kw_prt:
-    Op = NullaryInstruction::OP_PRT;
+    Op = ast::NullaryInstruction::OP_PRT;
     break;
   // TODO: handle other ops
   default:
@@ -44,18 +45,18 @@ void Sema::actOnNullaryInstruction(llvm::SMLoc Loc, tok::TokenKind OperatorKind,
     return;
   }
 
-  NullaryInstruction *NI = new NullaryInstruction(Loc, Op);
+  ast::NullaryInstruction *NI = new ast::NullaryInstruction(Loc, Op);
   Instructions.push_back(NI);
 }
 
-void Sema::actOnUnaryInstruction(llvm::SMLoc Loc, tok::TokenKind OperatorKind,
-                                 NumberLiteral *&Operand,
-                                 std::vector<Instruction *> &Instructions) {
+void Sema::actOnUnaryInstruction(
+    mlir::SMLoc Loc, tok::TokenKind OperatorKind, ast::NumberLiteral *&Operand,
+    std::vector<ast::Instruction *> &Instructions) {
   // TODO: validate
-  UnaryInstruction::UnaryOperator Op;
+  ast::UnaryInstruction::UnaryOperator Op;
   switch (OperatorKind) {
   case tok::kw_set:
-    Op = UnaryInstruction::OP_SET;
+    Op = ast::UnaryInstruction::OP_SET;
     break;
   // TODO: handle other ops
   default:
@@ -63,14 +64,15 @@ void Sema::actOnUnaryInstruction(llvm::SMLoc Loc, tok::TokenKind OperatorKind,
     return;
   }
 
-  UnaryInstruction *UI = new UnaryInstruction(Loc, Op, Operand);
+  ast::UnaryInstruction *UI = new ast::UnaryInstruction(Loc, Op, Operand);
   Instructions.push_back(UI);
 }
 
-NumberLiteral *Sema::actOnNumberLiteral(llvm::SMLoc Loc, llvm::StringRef Data) {
+ast::NumberLiteral *Sema::actOnNumberLiteral(mlir::SMLoc Loc,
+                                             llvm::StringRef Data) {
   // TODO: parse exponent
   // NOTE: use the same precision as the original implementation
   llvm::APFloat Value(llvm::APFloat::IEEEdouble(), Data);
 
-  return new NumberLiteral(Loc, Value);
+  return new ast::NumberLiteral(Loc, Value);
 }

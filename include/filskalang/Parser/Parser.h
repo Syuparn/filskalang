@@ -58,17 +58,17 @@ class Parser {
     }
   }
 
-  bool parseProgram(Program *&Program);
-  bool parseSubprogram(std::vector<Subprogram *> &Subprograms);
-  bool parseInstruction(std::vector<Instruction *> &Instructions);
-  bool parseNullaryInstruction(std::vector<Instruction *> &Instructions);
-  bool parseUnaryInstruction(std::vector<Instruction *> &Instructions);
-  bool parseNumberLiteral(NumberLiteral *&NumberLiteral);
+  bool parseProgram(ast::Program *&Program);
+  bool parseSubprogram(std::vector<ast::Subprogram *> &Subprograms);
+  bool parseInstruction(std::vector<ast::Instruction *> &Instructions);
+  bool parseNullaryInstruction(std::vector<ast::Instruction *> &Instructions);
+  bool parseUnaryInstruction(std::vector<ast::Instruction *> &Instructions);
+  bool parseNumberLiteral(ast::NumberLiteral *&NumberLiteral);
 
 public:
   Parser(Lexer &Lex, Sema &Sem);
 
-  Program *parse();
+  ast::Program *parse();
 };
 } // namespace filskalang
 

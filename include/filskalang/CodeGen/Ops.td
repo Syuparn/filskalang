@@ -20,7 +20,7 @@ def Filskalang_Dialect : Dialect {
   }];
 
   // The C++ namespace that the dialect class definition resides in.
-  let cppNamespace = "filskalang";
+  let cppNamespace = "mlir::filskalang";
 }
 
 // Base class for filskalang dialect operations.
@@ -30,12 +30,52 @@ class Filskalang_Op<string mnemonic, list<Trait> traits = []> :
 def PrtOp : Filskalang_Op<"prt"> {
   let summary = "print operation";
   let description = [{
-    The "prt" builtin operation corresponds to "prt" instruction
+    The "filskalang.prt" builtin operation represents the "prt" instruction
+  }];
+}
+
+def SubprogramOp : Filskalang_Op<"subprogram", [
+    FunctionOpInterface,
+  ]> {
+  let summary = "subprogram operation";
+  let description = [{
+    The "filskalang.subprogram" operation represents a subprogram.
+    This must have no parameters and return values.
   }];
 
-  let arguments = (ins F64:$input);
+  // NOTE: dummy parameters and return values are required for FunctionOpInterface
+  let arguments = (ins
+    SymbolNameAttr:$sym_name,
+    TypeAttrOf<FunctionType>:$function_type,
+    OptionalAttr<DictArrayAttr>:$arg_attrs,
+    OptionalAttr<DictArrayAttr>:$res_attrs
+  );
 
-  let assemblyFormat = "$input attr-dict `:` type($input)";
+  let regions = (region AnyRegion:$body);
+
+  let builders = [
+    OpBuilder<(ins
+      "StringRef":$name,
+      "FunctionType":$type,
+      CArg<"ArrayRef<NamedAttribute>", "{}">:$attrs
+    )>
+  ];
+
+  let extraClassDeclaration = [{
+    //===------------------------------------------------------------------===//
+    // SubprogramOpInterface Methods
+    //===------------------------------------------------------------------===//
+
+    /// Returns the argument types of this function.
+    ArrayRef<Type> getArgumentTypes() { return getFunctionType().getInputs(); }
+
+    /// Returns the result types of this function.
+    ArrayRef<Type> getResultTypes() { return getFunctionType().getResults(); }
+
+    Region *getCallableRegion() { return &getBody(); }
+  }];
+
+  let skipDefaultBuilders = 1;
 }
 
 #endif

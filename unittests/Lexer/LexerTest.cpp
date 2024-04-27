@@ -11,7 +11,7 @@ filskalang::Lexer NewLexer(const char *Src) {
   llvm::ErrorOr<std::unique_ptr<llvm::MemoryBuffer>> BufferOrErr =
       llvm::MemoryBuffer::getMemBuffer(Src, "DummyBuffer");
   // NOTE: skip error check because it must not be occurred
-  SrcMgr.AddNewSourceBuffer(std::move(*BufferOrErr), llvm::SMLoc());
+  SrcMgr.AddNewSourceBuffer(std::move(*BufferOrErr), mlir::SMLoc());
   std::printf("%d\n", SrcMgr.getNumBuffers());
 
   filskalang::DiagnosticsEngine Diags(SrcMgr);
@@ -30,7 +30,7 @@ void RunTest(const char *Src,
   llvm::ErrorOr<std::unique_ptr<llvm::MemoryBuffer>> BufferOrErr =
       llvm::MemoryBuffer::getMemBuffer(Src, "DummyBuffer");
   // NOTE: skip error check because it must not be occurred
-  SrcMgr.AddNewSourceBuffer(std::move(*BufferOrErr), llvm::SMLoc());
+  SrcMgr.AddNewSourceBuffer(std::move(*BufferOrErr), mlir::SMLoc());
   filskalang::DiagnosticsEngine Diags(SrcMgr);
 
   auto Lex = filskalang::Lexer(SrcMgr, Diags);

@@ -22,20 +22,20 @@ public:
 
   void initialize(filskalang::DiagnosticsEngine &Diags);
 
-  Program *actOnProgram(llvm::SMLoc Loc,
-                        std::vector<Subprogram *> &Subprograms);
+  ast::Program *actOnProgram(mlir::SMLoc Loc,
+                             std::vector<ast::Subprogram *> &Subprograms);
   // NOTE: result is pushed to Subprograms destructively
-  void actOnSubprogram(llvm::SMLoc Loc, llvm::StringRef Name,
-                       std::vector<Instruction *> &Instructions,
-                       std::vector<Subprogram *> &Subprograms);
+  void actOnSubprogram(mlir::SMLoc Loc, llvm::StringRef Name,
+                       std::vector<ast::Instruction *> &Instructions,
+                       std::vector<ast::Subprogram *> &Subprograms);
   // NOTE: result is pushed to Instructions destructively
-  void actOnNullaryInstruction(llvm::SMLoc Loc, tok::TokenKind OperatorKind,
-                               std::vector<Instruction *> &Instructions);
+  void actOnNullaryInstruction(mlir::SMLoc Loc, tok::TokenKind OperatorKind,
+                               std::vector<ast::Instruction *> &Instructions);
   // NOTE: result is pushed to Instructions destructively
-  void actOnUnaryInstruction(llvm::SMLoc Loc, tok::TokenKind OperatorKind,
-                             NumberLiteral *&Operand,
-                             std::vector<Instruction *> &Instructions);
-  NumberLiteral *actOnNumberLiteral(llvm::SMLoc Loc, llvm::StringRef Data);
+  void actOnUnaryInstruction(mlir::SMLoc Loc, tok::TokenKind OperatorKind,
+                             ast::NumberLiteral *&Operand,
+                             std::vector<ast::Instruction *> &Instructions);
+  ast::NumberLiteral *actOnNumberLiteral(mlir::SMLoc Loc, llvm::StringRef Data);
 };
 } // namespace filskalang
 

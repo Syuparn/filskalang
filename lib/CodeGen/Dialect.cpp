@@ -1,6 +1,6 @@
 #include "filskalang/CodeGen/Dialect.h"
 
-using namespace filskalang;
+using namespace mlir::filskalang;
 
 #include "filskalang/CodeGen/Dialect.cpp.inc"
 

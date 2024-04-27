@@ -8,8 +8,8 @@
 #ifndef FILSKALANG_BASIC_DIAGNOSTIC_H
 #define FILSKALANG_BASIC_DIAGNOSTIC_H
 
+#include "mlir/Support/LLVM.h"
 #include "llvm/Support/FormatVariadic.h"
-#include "llvm/Support/SMLoc.h"
 #include "llvm/Support/SourceMgr.h"
 #include <llvm/Support/raw_ostream.h>
 
@@ -33,7 +33,7 @@ public:
   unsigned numErrors() { return NumErrors; }
 
   template <typename... Args>
-  void report(llvm::SMLoc Loc, unsigned DiagID, Args &&...Arguments) {
+  void report(mlir::SMLoc Loc, unsigned DiagID, Args &&...Arguments) {
     std::string Msg = llvm::formatv(getDiagnosticText(DiagID),
                                     std::forward<Args>(Arguments)...)
                           .str();

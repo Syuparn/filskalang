@@ -67,7 +67,7 @@ private:
   void string(Token &Result);
   void comment();
 
-  llvm::SMLoc getLoc() { return llvm::SMLoc::getFromPointer(CurPtr); }
+  mlir::SMLoc getLoc() { return mlir::SMLoc::getFromPointer(CurPtr); }
 
   void formToken(Token &Result, const char *TokEnd, tok::TokenKind Kind);
 };

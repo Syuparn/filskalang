@@ -13,29 +13,30 @@ using namespace filskalang;
 
 Parser::Parser(Lexer &Lex, Sema &Sem) : Lex(Lex), Sem(Sem) {}
 
-Program *Parser::parse() {
-  Program *Program;
+ast::Program *Parser::parse() {
+  ast::Program *Program;
   parseProgram(Program);
   return Program;
 }
 
-bool Parser::parseProgram(Program *&Program) {
+bool Parser::parseProgram(ast::Program *&Program) {
   auto _errorhandler = [this] { return skipUntil(); };
-  std::vector<Subprogram *> Subprograms;
+  std::vector<ast::Subprogram *> Subprograms;
 
+  advance();
   while (Tok.is(tok::l_brace)) {
     if (!parseSubprogram(Subprograms)) {
       return _errorhandler();
     }
   }
-  // TODO: error if token remains
+  // TODO: error handling if !Tok.is(tok::l_brace)
 
   Program = Sem.actOnProgram(Tok.getLocation(), Subprograms);
 
   return false;
 }
 
-bool Parser::parseSubprogram(std::vector<Subprogram *> &Subprograms) {
+bool Parser::parseSubprogram(std::vector<ast::Subprogram *> &Subprograms) {
   auto _errorhandler = [this] { return skipUntil(tok::r_brace); };
 
   if (consume(tok::l_brace)) {
@@ -45,10 +46,10 @@ bool Parser::parseSubprogram(std::vector<Subprogram *> &Subprograms) {
   if (expect(tok::identifier)) {
     return _errorhandler();
   }
-  llvm::SMLoc Loc = Tok.getLocation();
+  mlir::SMLoc Loc = Tok.getLocation();
   llvm::StringRef Name = Tok.getIdentifier();
 
-  std::vector<Instruction *> Instructions;
+  std::vector<ast::Instruction *> Instructions;
   while (Tok.is(tok::l_brace)) {
     if (parseInstruction(Instructions)) {
       return _errorhandler();
@@ -61,10 +62,12 @@ bool Parser::parseSubprogram(std::vector<Subprogram *> &Subprograms) {
 
   Sem.actOnSubprogram(Loc, Name, Instructions, Subprograms);
 
+  advance();
+
   return false;
 }
 
-bool Parser::parseInstruction(std::vector<Instruction *> &Instructions) {
+bool Parser::parseInstruction(std::vector<ast::Instruction *> &Instructions) {
   // TODO: skip until all operators
   auto _errorhandler = [this] { return skipUntil(tok::kw_prt, tok::kw_set); };
 
@@ -84,8 +87,9 @@ bool Parser::parseInstruction(std::vector<Instruction *> &Instructions) {
   return false;
 }
 
-bool Parser::parseNullaryInstruction(std::vector<Instruction *> &Instructions) {
-  llvm::SMLoc Loc = Tok.getLocation();
+bool Parser::parseNullaryInstruction(
+    std::vector<ast::Instruction *> &Instructions) {
+  mlir::SMLoc Loc = Tok.getLocation();
   tok::TokenKind OperatorKind = Tok.getKind();
 
   Sem.actOnNullaryInstruction(Loc, OperatorKind, Instructions);
@@ -93,8 +97,9 @@ bool Parser::parseNullaryInstruction(std::vector<Instruction *> &Instructions) {
   return false;
 }
 
-bool Parser::parseUnaryInstruction(std::vector<Instruction *> &Instructions) {
-  llvm::SMLoc Loc = Tok.getLocation();
+bool Parser::parseUnaryInstruction(
+    std::vector<ast::Instruction *> &Instructions) {
+  mlir::SMLoc Loc = Tok.getLocation();
   tok::TokenKind OperatorKind = Tok.getKind();
 
   if (consume(tok::comma)) {
@@ -102,7 +107,7 @@ bool Parser::parseUnaryInstruction(std::vector<Instruction *> &Instructions) {
     return true;
   }
 
-  NumberLiteral *Number;
+  ast::NumberLiteral *Number;
   if (parseNumberLiteral(Number)) {
     // errHandler is called upstream
     return true;
@@ -113,12 +118,12 @@ bool Parser::parseUnaryInstruction(std::vector<Instruction *> &Instructions) {
   return false;
 }
 
-bool Parser::parseNumberLiteral(NumberLiteral *&Number) {
+bool Parser::parseNumberLiteral(ast::NumberLiteral *&Number) {
   if (expect(tok::number_literal)) {
     // errHandler is called upstream
     return true;
   }
-  llvm::SMLoc Loc = Tok.getLocation();
+  mlir::SMLoc Loc = Tok.getLocation();
   llvm::StringRef Data = Tok.getLiteralData();
 
   Number = Sem.actOnNumberLiteral(Loc, Data);
