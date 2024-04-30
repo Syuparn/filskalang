@@ -9,6 +9,7 @@
 #define FILSKALANG_LEXER_LEXER_H
 
 #include "filskalang/Basic/Diagnostic.h"
+#include "filskalang/Basic/Location.h"
 #include "filskalang/Lexer/Token.h"
 #include "llvm/ADT/StringMap.h"
 #include "llvm/ADT/StringRef.h"
@@ -37,6 +38,7 @@ public:
 class Lexer {
   llvm::SourceMgr &SrcMgr;
   DiagnosticsEngine &Diags;
+  const char *InputFileName;
 
   const char *CurPtr;
   llvm::StringRef CurBuf;
@@ -47,8 +49,9 @@ class Lexer {
   KeywordFilter Keywords;
 
 public:
-  Lexer(llvm::SourceMgr &SrcMgr, DiagnosticsEngine &Diags)
-      : SrcMgr(SrcMgr), Diags(Diags) {
+  Lexer(llvm::SourceMgr &SrcMgr, DiagnosticsEngine &Diags,
+        const char *InputFileName)
+      : SrcMgr(SrcMgr), Diags(Diags), InputFileName(InputFileName) {
     CurBuffer = SrcMgr.getMainFileID();
     CurBuf = SrcMgr.getMemoryBuffer(CurBuffer)->getBuffer();
     CurPtr = CurBuf.begin();
@@ -61,13 +64,18 @@ public:
 
   llvm::StringRef getBuffer() const { return CurBuf; }
 
+  Location getLoc() {
+    mlir::SMLoc Loc = mlir::SMLoc::getFromPointer(CurPtr);
+    auto LineAndColumn = SrcMgr.getLineAndColumn(Loc);
+    return Location(Loc, LineAndColumn.first, LineAndColumn.second,
+                    InputFileName);
+  }
+
 private:
   void identifier(Token &Result);
   void number(Token &Result);
   void string(Token &Result);
   void comment();
-
-  mlir::SMLoc getLoc() { return mlir::SMLoc::getFromPointer(CurPtr); }
 
   void formToken(Token &Result, const char *TokEnd, tok::TokenKind Kind);
 };

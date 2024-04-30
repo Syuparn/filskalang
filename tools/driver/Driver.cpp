@@ -63,7 +63,7 @@ int main(int Argc, const char **Argv) {
   SrcMgr.AddNewSourceBuffer(std::move(*FileOrErr), mlir::SMLoc());
 
   // parse input and generate AST
-  auto Lex = Lexer(SrcMgr, Diags);
+  auto Lex = Lexer(SrcMgr, Diags, InputFile.c_str());
   auto Sem = Sema(Diags);
   auto P = Parser(Lex, Sem);
   auto *ProgramAST = P.parse();
@@ -77,8 +77,7 @@ int main(int Argc, const char **Argv) {
   // Load our Dialect in this MLIR Context.
   Context.getOrLoadDialect<mlir::filskalang::FilskalangDialect>();
 
-  mlir::OwningOpRef<mlir::ModuleOp> module =
-      mlirGen(Context, InputFile.c_str(), SrcMgr, *ProgramAST);
+  mlir::OwningOpRef<mlir::ModuleOp> module = mlirGen(Context, *ProgramAST);
   if (!module) {
     return 1;
   }

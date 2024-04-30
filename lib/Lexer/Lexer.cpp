@@ -83,7 +83,7 @@ void Lexer::next(Token &Result) {
     next(Result);
     break;
   default:
-    Diags.report(getLoc(), diag::err_unknown_token);
+    Diags.report(getLoc().getLoc(), diag::err_unknown_token);
     formToken(Result, CurPtr + 1, tok::unknown);
   }
   return;
@@ -115,7 +115,7 @@ void Lexer::number(Token &Result) {
         IsFloat = true;
         continue;
       }
-      Diags.report(getLoc(), diag::err_invalid_number_token);
+      Diags.report(getLoc().getLoc(), diag::err_invalid_number_token);
     }
 
     if (*End == 'e') {
@@ -126,7 +126,7 @@ void Lexer::number(Token &Result) {
           continue;
         }
       }
-      Diags.report(getLoc(), diag::err_invalid_number_token);
+      Diags.report(getLoc().getLoc(), diag::err_invalid_number_token);
     }
 
     // number ends

@@ -10,6 +10,7 @@
 
 #include "filskalang/AST/AST.h"
 #include "filskalang/Basic/Diagnostic.h"
+#include "filskalang/Basic/Location.h"
 #include "filskalang/Lexer/Lexer.h"
 #include "filskalang/Sema/Sema.h"
 #include "llvm/ADT/StringRef.h"
@@ -64,6 +65,8 @@ class Parser {
   bool parseNullaryInstruction(std::vector<ast::Instruction *> &Instructions);
   bool parseUnaryInstruction(std::vector<ast::Instruction *> &Instructions);
   bool parseNumberLiteral(ast::NumberLiteral *&NumberLiteral);
+
+  Location getLocation() { return Lex.getLoc(); };
 
 public:
   Parser(Lexer &Lex, Sema &Sem);

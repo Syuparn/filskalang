@@ -10,6 +10,7 @@
 
 #include "filskalang/AST/AST.h"
 #include "filskalang/Basic/Diagnostic.h"
+#include "filskalang/Basic/Location.h"
 #include "filskalang/Basic/TokenKinds.h"
 
 namespace filskalang {
@@ -22,20 +23,20 @@ public:
 
   void initialize(filskalang::DiagnosticsEngine &Diags);
 
-  ast::Program *actOnProgram(mlir::SMLoc Loc,
+  ast::Program *actOnProgram(Location Loc,
                              std::vector<ast::Subprogram *> &Subprograms);
   // NOTE: result is pushed to Subprograms destructively
-  void actOnSubprogram(mlir::SMLoc Loc, llvm::StringRef Name,
+  void actOnSubprogram(Location Loc, llvm::StringRef Name,
                        std::vector<ast::Instruction *> &Instructions,
                        std::vector<ast::Subprogram *> &Subprograms);
   // NOTE: result is pushed to Instructions destructively
-  void actOnNullaryInstruction(mlir::SMLoc Loc, tok::TokenKind OperatorKind,
+  void actOnNullaryInstruction(Location Loc, tok::TokenKind OperatorKind,
                                std::vector<ast::Instruction *> &Instructions);
   // NOTE: result is pushed to Instructions destructively
-  void actOnUnaryInstruction(mlir::SMLoc Loc, tok::TokenKind OperatorKind,
+  void actOnUnaryInstruction(Location Loc, tok::TokenKind OperatorKind,
                              ast::NumberLiteral *&Operand,
                              std::vector<ast::Instruction *> &Instructions);
-  ast::NumberLiteral *actOnNumberLiteral(mlir::SMLoc Loc, llvm::StringRef Data);
+  ast::NumberLiteral *actOnNumberLiteral(Location Loc, llvm::StringRef Data);
 };
 } // namespace filskalang
 

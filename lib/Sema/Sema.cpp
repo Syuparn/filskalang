@@ -7,6 +7,7 @@
 
 #include "filskalang/Sema/Sema.h"
 #include "filskalang/AST/AST.h"
+#include "filskalang/Basic/Location.h"
 #include "filskalang/Basic/TokenKinds.h"
 #include "llvm/ADT/APFloat.h"
 
@@ -14,14 +15,13 @@ using namespace filskalang;
 
 void Sema::initialize(filskalang::DiagnosticsEngine &) {}
 
-ast::Program *Sema::actOnProgram(mlir::SMLoc Loc,
+ast::Program *Sema::actOnProgram(Location Loc,
                                  std::vector<ast::Subprogram *> &Subprograms) {
   // TODO: validate
-
   return new ast::Program(Loc, Subprograms);
 }
 
-void Sema::actOnSubprogram(mlir::SMLoc Loc, llvm::StringRef Name,
+void Sema::actOnSubprogram(Location Loc, llvm::StringRef Name,
                            std::vector<ast::Instruction *> &Instructions,
                            std::vector<ast::Subprogram *> &Subprograms) {
   // TODO: validate
@@ -30,7 +30,7 @@ void Sema::actOnSubprogram(mlir::SMLoc Loc, llvm::StringRef Name,
 }
 
 void Sema::actOnNullaryInstruction(
-    mlir::SMLoc Loc, tok::TokenKind OperatorKind,
+    Location Loc, tok::TokenKind OperatorKind,
     std::vector<ast::Instruction *> &Instructions) {
   // TODO: validate
 
@@ -41,7 +41,7 @@ void Sema::actOnNullaryInstruction(
     break;
   // TODO: handle other ops
   default:
-    Diags.report(Loc, diag::err_unexpected);
+    Diags.report(Loc.getLoc(), diag::err_unexpected);
     return;
   }
 
@@ -50,7 +50,7 @@ void Sema::actOnNullaryInstruction(
 }
 
 void Sema::actOnUnaryInstruction(
-    mlir::SMLoc Loc, tok::TokenKind OperatorKind, ast::NumberLiteral *&Operand,
+    Location Loc, tok::TokenKind OperatorKind, ast::NumberLiteral *&Operand,
     std::vector<ast::Instruction *> &Instructions) {
   // TODO: validate
   ast::UnaryInstruction::UnaryOperator Op;
@@ -60,7 +60,7 @@ void Sema::actOnUnaryInstruction(
     break;
   // TODO: handle other ops
   default:
-    Diags.report(Loc, diag::err_unexpected);
+    Diags.report(Loc.getLoc(), diag::err_unexpected);
     return;
   }
 
@@ -68,7 +68,7 @@ void Sema::actOnUnaryInstruction(
   Instructions.push_back(UI);
 }
 
-ast::NumberLiteral *Sema::actOnNumberLiteral(mlir::SMLoc Loc,
+ast::NumberLiteral *Sema::actOnNumberLiteral(Location Loc,
                                              llvm::StringRef Data) {
   // TODO: parse exponent
   // NOTE: use the same precision as the original implementation

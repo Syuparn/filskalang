@@ -19,14 +19,10 @@ class MLIRGenImpl {
 
 private:
   mlir::ModuleOp Module;
-  const char *InputFileName;
-  llvm::SourceMgr &SrcMgr;
   mlir::OpBuilder Builder;
 
 public:
-  MLIRGenImpl(mlir::MLIRContext &Context, const char *InputFileName,
-              llvm::SourceMgr &SrcMgr)
-      : InputFileName(InputFileName), SrcMgr(SrcMgr), Builder(&Context) {}
+  MLIRGenImpl(mlir::MLIRContext &Context) : Builder(&Context) {}
 
   mlir::ModuleOp mlirGen(filskalang::ast::Program &Program) {
     Module = mlir::ModuleOp::create(Builder.getUnknownLoc());
@@ -39,15 +35,9 @@ public:
   }
 
 private:
-  mlir::Location loc(mlir::SMLoc &Loc) {
-    auto LineColPair = SrcMgr.getLineAndColumn(Loc, 0);
-    return mlir::FileLineColLoc::get(Builder.getStringAttr(InputFileName),
-                                     LineColPair.first, LineColPair.second);
-  }
-
   mlir::filskalang::SubprogramOp
   mlirGen(filskalang::ast::Subprogram &Subprogram) {
-    mlir::SMLoc SMLoc = Subprogram.getLocation();
+    mlir::Location Loc = Subprogram.getLocation().getLocation(Builder);
 
     // create dummy parameters
     // NOTE: since subprogram does not have parameters, this must be empty
@@ -58,7 +48,7 @@ private:
     Builder.setInsertionPointToEnd(Module.getBody());
     mlir::filskalang::SubprogramOp Sub =
         Builder.create<mlir::filskalang::SubprogramOp>(
-            loc(SMLoc), Subprogram.getName(), funcType);
+            Loc, Subprogram.getName(), funcType);
 
     // subprogram body
     mlir::Block &EntryBlock = Sub.front();
@@ -68,7 +58,8 @@ private:
          Subprogram.getInstructions()) {
       switch (Instruction->getKind()) {
       case filskalang::ast::Instruction::IK_Nullary: {
-        mlirGen(*llvm::cast<filskalang::ast::NullaryInstruction>(Instruction));
+        mlirGenPrt(
+            *llvm::cast<filskalang::ast::NullaryInstruction>(Instruction));
         break;
       }
       default: {
@@ -81,18 +72,16 @@ private:
   }
 
   mlir::filskalang::PrtOp
-  mlirGen(filskalang::ast::NullaryInstruction &Instruction) {
-    mlir::SMLoc SMLoc = Instruction.getLocation();
-    return Builder.create<mlir::filskalang::PrtOp>(loc(SMLoc));
+  mlirGenPrt(filskalang::ast::NullaryInstruction &Instruction) {
+    mlir::Location Loc = Instruction.getLocation().getLocation(Builder);
+    return Builder.create<mlir::filskalang::PrtOp>(Loc);
   }
 };
 
 namespace filskalang {
 // The public API for codegen
 mlir::OwningOpRef<mlir::ModuleOp> mlirGen(mlir::MLIRContext &Context,
-                                          const char *InputFileName,
-                                          llvm::SourceMgr &SrcMgr,
                                           filskalang::ast::Program &Program) {
-  return MLIRGenImpl(Context, InputFileName, SrcMgr).mlirGen(Program);
+  return MLIRGenImpl(Context).mlirGen(Program);
 }
 } // namespace filskalang

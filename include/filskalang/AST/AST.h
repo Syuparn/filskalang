@@ -8,20 +8,20 @@
 #ifndef FILSKALANG_AST_AST_H
 #define FILSKALANG_AST_AST_H
 
+#include "filskalang/Basic/Location.h"
 #include "mlir/Support/LLVM.h"
 #include "llvm/ADT/APFloat.h"
 #include "llvm/ADT/StringRef.h"
-#include "llvm/Support/SMLoc.h"
 #include <vector>
 
 namespace filskalang {
 namespace ast {
 class NumberLiteral {
-  mlir::SMLoc Loc;
+  Location Loc;
   llvm::APFloat Value;
 
 public:
-  NumberLiteral(mlir::SMLoc Loc, const llvm::APFloat &Value)
+  NumberLiteral(Location Loc, const llvm::APFloat &Value)
       : Loc(Loc), Value(Value) {}
   llvm::APFloat &getValue() { return Value; }
 };
@@ -34,17 +34,17 @@ public:
   };
 
 protected:
-  mlir::SMLoc Loc;
+  Location Loc;
 
 private:
   const InstructionKind Kind;
 
 protected:
-  Instruction(mlir::SMLoc Loc, InstructionKind Kind) : Loc(Loc), Kind(Kind) {}
+  Instruction(Location Loc, InstructionKind Kind) : Loc(Loc), Kind(Kind) {}
 
 public:
   InstructionKind getKind() const { return Kind; }
-  mlir::SMLoc getLocation() { return Loc; }
+  Location getLocation() { return Loc; }
 };
 
 class NullaryInstruction : public Instruction {
@@ -57,7 +57,7 @@ private:
   NullaryOperator Operator;
 
 public:
-  NullaryInstruction(mlir::SMLoc Loc, NullaryOperator Operator)
+  NullaryInstruction(Location Loc, NullaryOperator Operator)
       : Instruction(Loc, IK_Nullary), Operator(Operator) {}
 
   static bool classof(const Instruction *I) {
@@ -77,7 +77,7 @@ private:
   NumberLiteral *&Operand;
 
 public:
-  UnaryInstruction(mlir::SMLoc Loc, UnaryOperator Operator,
+  UnaryInstruction(Location Loc, UnaryOperator Operator,
                    NumberLiteral *&Operand)
       : Instruction(Loc, IK_Unary), Operator(Operator), Operand(Operand) {}
 
@@ -88,33 +88,33 @@ public:
 
 class Subprogram {
 private:
-  mlir::SMLoc Loc;
+  Location Loc;
   llvm::StringRef Name;
   std::vector<Instruction *> Instructions;
 
 public:
-  Subprogram(mlir::SMLoc Loc, llvm::StringRef Name,
+  Subprogram(Location Loc, llvm::StringRef Name,
              std::vector<Instruction *> Instructions)
       : Loc(Loc), Name(Name), Instructions(Instructions) {}
 
   const std::vector<Instruction *> &getInstructions() { return Instructions; }
-  mlir::SMLoc getLocation() { return Loc; }
+  Location getLocation() { return Loc; }
   llvm::StringRef getName() { return Name; }
 };
 
 class Program {
 private:
-  mlir::SMLoc Loc;
+  Location Loc;
   std::vector<Subprogram *> Subprograms;
 
   // TODO: separate main from the others
 
 public:
-  Program(mlir::SMLoc Loc, std::vector<Subprogram *> Subprograms)
+  Program(Location Loc, std::vector<Subprogram *> Subprograms)
       : Loc(Loc), Subprograms(Subprograms) {}
 
   const std::vector<Subprogram *> &getSubprograms() { return Subprograms; }
-  mlir::SMLoc getLocation() { return Loc; }
+  Location getLocation() { return Loc; }
 };
 } // namespace ast
 } // namespace filskalang

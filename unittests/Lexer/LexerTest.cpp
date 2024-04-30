@@ -16,7 +16,7 @@ filskalang::Lexer NewLexer(const char *Src) {
 
   filskalang::DiagnosticsEngine Diags(SrcMgr);
 
-  return filskalang::Lexer(SrcMgr, Diags);
+  return filskalang::Lexer(SrcMgr, Diags, "dummy.filska");
 }
 
 template <unsigned long N>
@@ -33,7 +33,7 @@ void RunTest(const char *Src,
   SrcMgr.AddNewSourceBuffer(std::move(*BufferOrErr), mlir::SMLoc());
   filskalang::DiagnosticsEngine Diags(SrcMgr);
 
-  auto Lex = filskalang::Lexer(SrcMgr, Diags);
+  auto Lex = filskalang::Lexer(SrcMgr, Diags, "dummy.filska");
   filskalang::Token Actual;
 
   testing::internal::CaptureStderr();
