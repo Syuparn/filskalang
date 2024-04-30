@@ -18,12 +18,11 @@ namespace filskalang {
 namespace ast {
 class NumberLiteral {
   Location Loc;
-  llvm::APFloat Value;
+  double Value;
 
 public:
-  NumberLiteral(Location Loc, const llvm::APFloat &Value)
-      : Loc(Loc), Value(Value) {}
-  llvm::APFloat &getValue() { return Value; }
+  NumberLiteral(Location Loc, double Value) : Loc(Loc), Value(Value) {}
+  double getValue() { return Value; }
 };
 
 class Instruction {
@@ -74,7 +73,7 @@ public:
 
 private:
   UnaryOperator Operator;
-  NumberLiteral *&Operand;
+  NumberLiteral *Operand;
 
 public:
   UnaryInstruction(Location Loc, UnaryOperator Operator,

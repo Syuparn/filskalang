@@ -15,7 +15,7 @@ using namespace filskalang;
 Parser::Parser(Lexer &Lex, Sema &Sem) : Lex(Lex), Sem(Sem) {}
 
 ast::Program *Parser::parse() {
-  ast::Program *Program;
+  ast::Program *Program = nullptr;
   parseProgram(Program);
   return Program;
 }

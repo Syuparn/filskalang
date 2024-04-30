@@ -27,11 +27,24 @@ def Filskalang_Dialect : Dialect {
 class Filskalang_Op<string mnemonic, list<Trait> traits = []> :
     Op<Filskalang_Dialect, mnemonic, traits>;
 
+// Nullary Operations
+
 def PrtOp : Filskalang_Op<"prt"> {
   let summary = "print operation";
   let description = [{
     The "filskalang.prt" builtin operation represents the "prt" instruction
   }];
+}
+
+// Unary Operations
+
+def SetOp : Filskalang_Op<"set"> {
+  let summary = "set operation";
+  let description = [{
+    The "filskalang.set" builtin operation represents the "set" instruction
+  }];
+
+  let arguments = (ins F64Attr:$value);
 }
 
 def SubprogramOp : Filskalang_Op<"subprogram", [

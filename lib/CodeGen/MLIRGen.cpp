@@ -11,6 +11,7 @@
 #include "filskalang/AST/AST.h"
 #include "filskalang/CodeGen/Dialect.h"
 #include "mlir/IR/Builders.h"
+#include "mlir/IR/BuiltinAttributes.h"
 #include "mlir/IR/BuiltinOps.h"
 #include "mlir/IR/Location.h"
 #include "llvm/Support/Casting.h"
@@ -62,6 +63,10 @@ private:
             *llvm::cast<filskalang::ast::NullaryInstruction>(Instruction));
         break;
       }
+      case filskalang::ast::Instruction::IK_Unary: {
+        mlirGenSet(*llvm::cast<filskalang::ast::UnaryInstruction>(Instruction));
+        break;
+      }
       default: {
         // TODO: impl
       }
@@ -75,6 +80,15 @@ private:
   mlirGenPrt(filskalang::ast::NullaryInstruction &Instruction) {
     mlir::Location Loc = Instruction.getLocation().getLocation(Builder);
     return Builder.create<mlir::filskalang::PrtOp>(Loc);
+  }
+
+  mlir::filskalang::SetOp
+  mlirGenSet(filskalang::ast::UnaryInstruction &Instruction) {
+    auto Type = Builder.getF64Type();
+    mlir::Location Loc = Instruction.getLocation().getLocation(Builder);
+    auto Attr =
+        mlir::FloatAttr::get(Type, Instruction.getOperand()->getValue());
+    return Builder.create<mlir::filskalang::SetOp>(Loc, Attr);
   }
 };
 

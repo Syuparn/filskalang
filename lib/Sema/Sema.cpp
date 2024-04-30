@@ -72,7 +72,6 @@ ast::NumberLiteral *Sema::actOnNumberLiteral(Location Loc,
                                              llvm::StringRef Data) {
   // TODO: parse exponent
   // NOTE: use the same precision as the original implementation
-  llvm::APFloat Value(llvm::APFloat::IEEEdouble(), Data);
-
+  double Value = std::stod(Data.str());
   return new ast::NumberLiteral(Loc, Value);
 }
