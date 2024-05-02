@@ -77,14 +77,14 @@ int main(int Argc, const char **Argv) {
   // Load our Dialect in this MLIR Context.
   Context.getOrLoadDialect<mlir::filskalang::FilskalangDialect>();
 
-  mlir::OwningOpRef<mlir::ModuleOp> module = mlirGen(Context, *ProgramAST);
-  if (!module) {
+  mlir::OwningOpRef<mlir::ModuleOp> Module = mlirGen(Context, *ProgramAST);
+  if (!Module) {
     return 1;
   }
 
   // only emit MLIR
   if (EmitAction == EmitMLIR) {
-    module->dump();
+    Module->dump();
     return 0;
   }
 
