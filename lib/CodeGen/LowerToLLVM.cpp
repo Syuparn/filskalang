@@ -15,7 +15,6 @@
 #include "mlir/IR/BuiltinOps.h"
 #include "mlir/IR/BuiltinTypes.h"
 #include "mlir/Pass/Pass.h"
-#include <iostream>
 #include <memory>
 
 namespace {
@@ -155,19 +154,20 @@ public:
     // subprograms into a function and call it from the module
     auto DummyType = mlir::LLVM::LLVMFunctionType::get(
         mlir::LLVM::LLVMVoidType::get(Context), mlir::ArrayRef<mlir::Type>{});
-    auto Func =
-        Rewriter.create<mlir::LLVM::LLVMFuncOp>(Loc, "filskamain", DummyType);
+    // NOTE: name should be "main" because LLVM IR recognize the name as an
+    // entrypoint
+    auto Func = Rewriter.create<mlir::LLVM::LLVMFuncOp>(Loc, "main", DummyType);
 
     Rewriter.inlineRegionBefore(Subprogram.getBody(), Func.getBody(),
                                 Func.end());
 
-    // Rewriter.inlineBlockBefore(Subprogram->getBlock(), &Block, Block.end());
-
-    // add terminator instruction
+    // add return because llvm block must ends with terminator operator
     // TODO: replace with infinite loop
-    mlir::Value DummyRetVal = Rewriter.create<mlir::LLVM::ConstantOp>(
-        Loc, Rewriter.getI64Type(), Rewriter.getIndexAttr(0));
-    Rewriter.create<mlir::LLVM::ReturnOp>(Loc, DummyRetVal);
+    mlir::Block *EntryBlock = &Func.getBody().front();
+    Rewriter.setInsertionPointToEnd(EntryBlock);
+    Rewriter.create<mlir::LLVM::ReturnOp>(Loc, mlir::ArrayRef<mlir::Value>());
+
+    Rewriter.setInsertionPointToEnd(Subprogram->getBlock());
 
     // Notify the rewriter that this operation has been removed.
     Rewriter.eraseOp(Op);

@@ -10,6 +10,7 @@
 #include "filskalang/CodeGen/MLIRGen.h"
 #include "filskalang/AST/AST.h"
 #include "filskalang/CodeGen/Dialect.h"
+#include "mlir/Dialect/LLVMIR/LLVMDialect.h"
 #include "mlir/IR/Builders.h"
 #include "mlir/IR/BuiltinAttributes.h"
 #include "mlir/IR/BuiltinOps.h"
