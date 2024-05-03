@@ -48,7 +48,7 @@ public:
 
     // Generate a call to printf
     auto Load = Rewriter.create<mlir::LLVM::LoadOp>(
-        Loc, mlir::LLVM::LLVMPointerType::get(Context), MemoryPointer);
+        Loc, mlir::Float64Type::get(Context), MemoryPointer);
 
     Rewriter.create<mlir::LLVM::CallOp>(
         Loc, getPrintfType(Context), PrintfRef,
