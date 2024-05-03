@@ -34,6 +34,8 @@ def PrtOp : Filskalang_Op<"prt"> {
   let description = [{
     The "filskalang.prt" builtin operation represents the "prt" instruction
   }];
+
+  let arguments = (ins SymbolNameAttr:$subprogramName);
 }
 
 // Unary Operations
@@ -44,7 +46,7 @@ def SetOp : Filskalang_Op<"set"> {
     The "filskalang.set" builtin operation represents the "set" instruction
   }];
 
-  let arguments = (ins F64Attr:$value);
+  let arguments = (ins F64Attr:$value, SymbolNameAttr:$subprogramName);
 }
 
 def SubprogramOp : Filskalang_Op<"subprogram", [

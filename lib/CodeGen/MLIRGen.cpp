@@ -16,6 +16,7 @@
 #include "mlir/IR/BuiltinOps.h"
 #include "mlir/IR/Location.h"
 #include "llvm/Support/Casting.h"
+#include <llvm-18/llvm/ADT/StringRef.h>
 
 class MLIRGenImpl {
 
@@ -61,11 +62,13 @@ private:
       switch (Instruction->getKind()) {
       case filskalang::ast::Instruction::IK_Nullary: {
         mlirGenPrt(
-            *llvm::cast<filskalang::ast::NullaryInstruction>(Instruction));
+            *llvm::cast<filskalang::ast::NullaryInstruction>(Instruction),
+            Subprogram.getName());
         break;
       }
       case filskalang::ast::Instruction::IK_Unary: {
-        mlirGenSet(*llvm::cast<filskalang::ast::UnaryInstruction>(Instruction));
+        mlirGenSet(*llvm::cast<filskalang::ast::UnaryInstruction>(Instruction),
+                   Subprogram.getName());
         break;
       }
       default: {
@@ -78,18 +81,21 @@ private:
   }
 
   mlir::filskalang::PrtOp
-  mlirGenPrt(filskalang::ast::NullaryInstruction &Instruction) {
+  mlirGenPrt(filskalang::ast::NullaryInstruction &Instruction,
+             llvm::StringRef SubprogramName) {
     mlir::Location Loc = Instruction.getLocation().getLocation(Builder);
-    return Builder.create<mlir::filskalang::PrtOp>(Loc);
+    return Builder.create<mlir::filskalang::PrtOp>(Loc, SubprogramName);
   }
 
   mlir::filskalang::SetOp
-  mlirGenSet(filskalang::ast::UnaryInstruction &Instruction) {
+  mlirGenSet(filskalang::ast::UnaryInstruction &Instruction,
+             llvm::StringRef SubprogramName) {
     auto Type = Builder.getF64Type();
     mlir::Location Loc = Instruction.getLocation().getLocation(Builder);
     auto Attr =
         mlir::FloatAttr::get(Type, Instruction.getOperand()->getValue());
-    return Builder.create<mlir::filskalang::SetOp>(Loc, Attr);
+    return Builder.create<mlir::filskalang::SetOp>(
+        Loc, Attr, Builder.getStringAttr(SubprogramName));
   }
 };
 

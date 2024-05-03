@@ -15,9 +15,15 @@
 #include "mlir/IR/BuiltinOps.h"
 #include "mlir/IR/BuiltinTypes.h"
 #include "mlir/Pass/Pass.h"
+#include <llvm-18/llvm/ADT/APFloat.h>
 #include <memory>
+#include <unordered_map>
 
 namespace {
+// TODO: move to a member variable in any class
+std::unordered_map<std::string, mlir::TypedValue<::mlir::LLVM::LLVMPointerType>>
+    SubprogramMemory;
+
 class PrtOpLowering : public mlir::ConversionPattern {
 public:
   explicit PrtOpLowering(mlir::MLIRContext *Context)
@@ -27,10 +33,9 @@ public:
   mlir::LogicalResult
   matchAndRewrite(mlir::Operation *Op, mlir::ArrayRef<mlir::Value> Operands,
                   mlir::ConversionPatternRewriter &Rewriter) const override {
-    // TODO: handle other ops
-
     auto *Context = Rewriter.getContext();
     auto Loc = Op->getLoc();
+    auto PrtOp = mlir::cast<mlir::filskalang::PrtOp>(Op);
 
     mlir::ModuleOp ParentModule = Op->getParentOfType<mlir::ModuleOp>();
 
@@ -39,17 +44,11 @@ public:
     mlir::Value FormatSpecifierCst = getOrCreateGlobalString(
         Loc, Rewriter, "frmt_spec", mlir::StringRef("%f \0", 4), ParentModule);
 
-    // define subprogram register
-    // TODO: move to subprogram
-    mlir::Value Cst0 = Rewriter.create<mlir::LLVM::ConstantOp>(
-        Loc, Rewriter.getI64Type(), Rewriter.getIndexAttr(0));
-    auto Alloca = Rewriter.create<mlir::LLVM::AllocaOp>(
-        Loc, /*resultType*/ mlir::LLVM::LLVMPointerType::get(Context),
-        /*elementType*/ Rewriter.getF64Type(), Cst0);
+    auto MemoryPointer = SubprogramMemory.at(PrtOp.getSubprogramName().str());
 
     // Generate a call to printf
     auto Load = Rewriter.create<mlir::LLVM::LoadOp>(
-        Loc, mlir::LLVM::LLVMPointerType::get(Context), Alloca.getRes());
+        Loc, mlir::LLVM::LLVMPointerType::get(Context), MemoryPointer);
 
     Rewriter.create<mlir::LLVM::CallOp>(
         Loc, getPrintfType(Context), PrintfRef,
@@ -126,7 +125,16 @@ public:
   mlir::LogicalResult
   matchAndRewrite(mlir::Operation *Op, mlir::ArrayRef<mlir::Value> Operands,
                   mlir::ConversionPatternRewriter &Rewriter) const override {
-    // TODO: replace and create
+    auto Loc = Op->getLoc();
+    auto SetOp = mlir::cast<mlir::filskalang::SetOp>(Op);
+
+    mlir::Value ConstantOp = Rewriter.create<mlir::LLVM::ConstantOp>(
+        Loc, Rewriter.getF64Type(),
+        Rewriter.getF64FloatAttr(SetOp.getValue().convertToDouble()));
+
+    auto MemoryPointer = SubprogramMemory.at(SetOp.getSubprogramName().str());
+    auto Value = llvm::APFloat(SetOp.getValue());
+    Rewriter.create<mlir::LLVM::StoreOp>(Loc, ConstantOp, MemoryPointer);
 
     // Notify the rewriter that this operation has been removed.
     Rewriter.eraseOp(Op);
@@ -157,13 +165,23 @@ public:
     // NOTE: name should be "main" because LLVM IR recognize the name as an
     // entrypoint
     auto Func = Rewriter.create<mlir::LLVM::LLVMFuncOp>(Loc, "main", DummyType);
-
     Rewriter.inlineRegionBefore(Subprogram.getBody(), Func.getBody(),
                                 Func.end());
+    mlir::Block *EntryBlock = &Func.getBody().front();
+
+    // define subprogram register `m`
+    Rewriter.setInsertionPointToStart(EntryBlock);
+    mlir::Value Cst0 = Rewriter.create<mlir::LLVM::ConstantOp>(
+        Loc, Rewriter.getI64Type(), Rewriter.getIndexAttr(0));
+    auto Alloca = Rewriter.create<mlir::LLVM::AllocaOp>(
+        Loc, /*resultType*/ mlir::LLVM::LLVMPointerType::get(Context),
+        /*elementType*/ Rewriter.getF64Type(), Cst0);
+    // set to SubprogramMemory map (this is used when the subprogram register
+    // `m` is referred)
+    SubprogramMemory[Subprogram.getName().str()] = Alloca.getRes();
 
     // add return because llvm block must ends with terminator operator
     // TODO: replace with infinite loop
-    mlir::Block *EntryBlock = &Func.getBody().front();
     Rewriter.setInsertionPointToEnd(EntryBlock);
     Rewriter.create<mlir::LLVM::ReturnOp>(Loc, mlir::ArrayRef<mlir::Value>());
 
@@ -198,9 +216,9 @@ void FilskalangToLLVMLoweringPass::runOnOperation() {
   // TODO: add transitive lowering patterns
 
   // lower from filskalang dialect
+  Patterns.add<SubprogramOpLowering>(&getContext());
   Patterns.add<PrtOpLowering>(&getContext());
   Patterns.add<SetOpLowering>(&getContext());
-  Patterns.add<SubprogramOpLowering>(&getContext());
 
   // completely lower to LLVM
   auto Module = getOperation();
