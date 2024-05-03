@@ -8,6 +8,7 @@ NOTE: This is under construction!
 - [x] init project
 - [x] tokens
 - [x] lexer
+- [x] prototyping
 - [ ] parser
 - [ ] evaluator (generate mlir)
 - [ ] filskalang dialect
@@ -40,6 +41,8 @@ $ cmake --build .
 ```bash
 $ ./bin/filskalang --version
 Filskalang 0.1
+$ ./bin/filskalang example/simple.filska -emit llvm 2>&1 | lli
+10.000000
 ```
 
 # development
@@ -51,4 +54,18 @@ Filskalang 0.1
 $ cmake -G Ninja . -DCMAKE_BUILD_TYPE=DEBUG
 $ cmake --build .
 $ ./run_tests.sh
+```
+
+## debug print
+
+```bash
+# show mlir in each pass
+$ ./bin/filskalang --mlir-print-ir-after-all example/simple.filska -emit llvm
+```
+
+## troubleshooting a segmentation fault
+
+```bash
+$ lldb ./bin/filskalang
+(lldb) run example/simple.filska
 ```
