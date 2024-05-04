@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -ex
+
 echo "unit tests"
 for f in $(ls ./bin/*_test); do
     $f

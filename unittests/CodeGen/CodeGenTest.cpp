@@ -55,7 +55,30 @@ TEST(CodeGenTest, Simple) {
   RunTest(Src, Expected);
 }
 
-// TODO: multiple subprograms
+// multiple subprograms
+
+TEST(CodeGenTest, MultipleSubprograms) {
+  auto Src = R"(
+    { main
+      prt
+    }
+    { another
+      set,10
+    }
+    )";
+
+  auto Expected = R"("builtin.module"() ({
+  "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
+    "filskalang.prt"() <{subprogramName = "main"}> : () -> ()
+  }) : () -> ()
+  "filskalang.subprogram"() <{function_type = () -> (), sym_name = "another"}> ({
+    "filskalang.set"() <{subprogramName = "another", value = 1.000000e+01 : f64}> : () -> ()
+  }) : () -> ()
+}) : () -> ()
+)";
+
+  RunTest(Src, Expected);
+}
 
 // nullary instructions
 
