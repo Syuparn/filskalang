@@ -7,6 +7,7 @@
 
 #include "filskalang/Sema/Sema.h"
 #include "filskalang/AST/AST.h"
+#include "filskalang/Basic/Diagnostic.h"
 #include "filskalang/Basic/Location.h"
 #include "filskalang/Basic/TokenKinds.h"
 #include "llvm/ADT/APFloat.h"
@@ -17,16 +18,23 @@ void Sema::initialize(filskalang::DiagnosticsEngine &) {}
 
 ast::Program *Sema::actOnProgram(Location Loc,
                                  std::vector<ast::Subprogram *> &Subprograms) {
-  // TODO: validate
+  if (SubprogramNames.find("main") == SubprogramNames.end()) {
+    Diags.report(Loc.getLoc(), diag::err_no_main);
+  }
+
   return new ast::Program(Loc, Subprograms);
 }
 
 void Sema::actOnSubprogram(Location Loc, llvm::StringRef Name,
                            std::vector<ast::Instruction *> &Instructions,
                            std::vector<ast::Subprogram *> &Subprograms) {
-  // TODO: validate
+  if (SubprogramNames.find(Name.str()) != SubprogramNames.end()) {
+    Diags.report(Loc.getLoc(), diag::err_duplicated_subprogram, Name.str());
+  }
+
   ast::Subprogram *Sub = new ast::Subprogram(Loc, Name, Instructions);
   Subprograms.push_back(Sub);
+  SubprogramNames.insert(Name.str());
 }
 
 void Sema::actOnNullaryInstruction(

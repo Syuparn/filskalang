@@ -1,3 +1,5 @@
 #!/bin/bash
 
-./bin/*_test
+for f in $(ls ./bin/*_test); do
+    $f
+done

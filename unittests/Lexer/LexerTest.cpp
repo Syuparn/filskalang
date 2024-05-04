@@ -6,19 +6,6 @@
 #include "gtest/gtest.h"
 #include "gtest/internal/gtest-port.h"
 
-filskalang::Lexer NewLexer(const char *Src) {
-  llvm::SourceMgr SrcMgr;
-  llvm::ErrorOr<std::unique_ptr<llvm::MemoryBuffer>> BufferOrErr =
-      llvm::MemoryBuffer::getMemBuffer(Src, "DummyBuffer");
-  // NOTE: skip error check because it must not be occurred
-  SrcMgr.AddNewSourceBuffer(std::move(*BufferOrErr), mlir::SMLoc());
-  std::printf("%d\n", SrcMgr.getNumBuffers());
-
-  filskalang::DiagnosticsEngine Diags(SrcMgr);
-
-  return filskalang::Lexer(SrcMgr, Diags, "dummy.filska");
-}
-
 template <unsigned long N>
 void RunTest(const char *Src,
              std::array<filskalang::tok::TokenKind, N> ExpectedKinds,

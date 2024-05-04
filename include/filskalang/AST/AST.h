@@ -8,6 +8,7 @@
 #ifndef FILSKALANG_AST_AST_H
 #define FILSKALANG_AST_AST_H
 
+#include "deps/magic_enum.hpp"
 #include "filskalang/Basic/Location.h"
 #include "mlir/Support/LLVM.h"
 #include "llvm/ADT/APFloat.h"
@@ -23,6 +24,12 @@ class NumberLiteral {
 public:
   NumberLiteral(Location Loc, double Value) : Loc(Loc), Value(Value) {}
   double getValue() { return Value; }
+
+  std::string str() {
+    char s[10];
+    std::sprintf(s, "%f", Value);
+    return s;
+  }
 };
 
 class Instruction {
@@ -40,10 +47,13 @@ private:
 
 protected:
   Instruction(Location Loc, InstructionKind Kind) : Loc(Loc), Kind(Kind) {}
+  virtual ~Instruction() {}
 
 public:
   InstructionKind getKind() const { return Kind; }
   Location getLocation() { return Loc; }
+
+  virtual std::string str() = 0;
 };
 
 class NullaryInstruction : public Instruction {
@@ -58,11 +68,18 @@ private:
 public:
   NullaryInstruction(Location Loc, NullaryOperator Operator)
       : Instruction(Loc, IK_Nullary), Operator(Operator) {}
+  virtual ~NullaryInstruction() {}
 
   static bool classof(const Instruction *I) {
     return I->getKind() == IK_Nullary;
   }
   NullaryOperator getOperator() { return Operator; }
+
+  std::string str() override {
+    std::stringstream ss;
+    ss << "(" << magic_enum::enum_name(Operator) << ")";
+    return ss.str();
+  }
 };
 
 class UnaryInstruction : public Instruction {
@@ -79,10 +96,18 @@ public:
   UnaryInstruction(Location Loc, UnaryOperator Operator,
                    NumberLiteral *&Operand)
       : Instruction(Loc, IK_Unary), Operator(Operator), Operand(Operand) {}
+  virtual ~UnaryInstruction() {}
 
   static bool classof(const Instruction *I) { return I->getKind() == IK_Unary; }
   UnaryOperator getOperator() { return Operator; }
   NumberLiteral *&getOperand() { return Operand; }
+
+  std::string str() override {
+    std::stringstream ss;
+    ss << "(" << magic_enum::enum_name(Operator) << " " << Operand->str()
+       << ")";
+    return ss.str();
+  }
 };
 
 class Subprogram {
@@ -99,6 +124,17 @@ public:
   const std::vector<Instruction *> &getInstructions() { return Instructions; }
   Location getLocation() { return Loc; }
   llvm::StringRef getName() { return Name; }
+
+  std::string str() {
+    std::stringstream ss;
+    ss << "(" << Name.str() << " ";
+    for (auto Instruction : Instructions) {
+      ss << Instruction->str() << " ";
+    }
+    ss << ") ";
+
+    return ss.str();
+  }
 };
 
 class Program {
@@ -114,6 +150,14 @@ public:
 
   const std::vector<Subprogram *> &getSubprograms() { return Subprograms; }
   Location getLocation() { return Loc; }
+
+  std::string str() {
+    std::stringstream ss;
+    for (auto Subprogram : Subprograms) {
+      ss << Subprogram->str();
+    }
+    return ss.str();
+  }
 };
 } // namespace ast
 } // namespace filskalang

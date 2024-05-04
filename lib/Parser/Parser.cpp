@@ -7,6 +7,7 @@
 
 #include "filskalang/Parser/Parser.h"
 #include "filskalang/AST/AST.h"
+#include "filskalang/Basic/Diagnostic.h"
 #include "filskalang/Basic/Location.h"
 #include "filskalang/Basic/TokenKinds.h"
 
@@ -30,7 +31,6 @@ bool Parser::parseProgram(ast::Program *&Program) {
       return _errorhandler();
     }
   }
-  // TODO: error handling if !Tok.is(tok::l_brace)
 
   Program = Sem.actOnProgram(getLocation(), Subprograms);
 
@@ -56,7 +56,6 @@ bool Parser::parseSubprogram(std::vector<ast::Subprogram *> &Subprograms) {
     if (parseInstruction(Instructions)) {
       return _errorhandler();
     }
-    advance();
   }
 
   if (!Tok.is(tok::r_brace)) {
@@ -96,6 +95,13 @@ bool Parser::parseNullaryInstruction(
 
   Sem.actOnNullaryInstruction(Loc, OperatorKind, Instructions);
 
+  advance();
+  if (Tok.is(tok::comma)) {
+    getDiagnostics().report(Tok.getLocation(), diag::err_invalid_arity_nullary,
+                            magic_enum::enum_name(OperatorKind));
+    return true;
+  }
+
   return false;
 }
 
@@ -106,6 +112,8 @@ bool Parser::parseUnaryInstruction(
 
   advance();
   if (consume(tok::comma)) {
+    getDiagnostics().report(Tok.getLocation(), diag::err_invalid_arity_unary,
+                            magic_enum::enum_name(OperatorKind));
     // errHandler is called upstream
     return true;
   }
@@ -118,11 +126,20 @@ bool Parser::parseUnaryInstruction(
 
   Sem.actOnUnaryInstruction(Loc, OperatorKind, Number, Instructions);
 
+  advance();
+  if (Tok.is(tok::comma)) {
+    getDiagnostics().report(Tok.getLocation(), diag::err_invalid_arity_unary,
+                            magic_enum::enum_name(OperatorKind));
+    return true;
+  }
+
   return false;
 }
 
 bool Parser::parseNumberLiteral(ast::NumberLiteral *&Number) {
-  if (expect(tok::number_literal)) {
+  if (!Tok.is(tok::number_literal)) {
+    getDiagnostics().report(Tok.getLocation(),
+                            diag::err_invalid_argument_not_number);
     // errHandler is called upstream
     return true;
   }

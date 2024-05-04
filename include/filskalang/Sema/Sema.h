@@ -12,11 +12,13 @@
 #include "filskalang/Basic/Diagnostic.h"
 #include "filskalang/Basic/Location.h"
 #include "filskalang/Basic/TokenKinds.h"
+#include <set>
 
 namespace filskalang {
 
 class Sema {
   DiagnosticsEngine &Diags;
+  std::set<std::string> SubprogramNames;
 
 public:
   Sema(DiagnosticsEngine &Diags) : Diags(Diags) { initialize(Diags); }
