@@ -45,12 +45,12 @@ TEST(CodeGenTest, Simple) {
     { main }
     )";
 
-  auto Expected = "\"builtin.module\"() ({\n"
-                  "  \"filskalang.subprogram\"() <{function_type = () -> (), "
-                  "sym_name = \"main\"}> ({\n"
-                  "  ^bb0:\n"
-                  "  }) : () -> ()\n"
-                  "}) : () -> ()\n";
+  auto Expected = R"("builtin.module"() ({
+  "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
+  ^bb0:
+  }) : () -> ()
+}) : () -> ()
+)";
 
   RunTest(Src, Expected);
 }
@@ -66,13 +66,12 @@ TEST(CodeGenTest, Prt) {
     }
     )";
 
-  auto Expected =
-      "\"builtin.module\"() ({\n"
-      "  \"filskalang.subprogram\"() <{function_type = () -> (), "
-      "sym_name = \"main\"}> ({\n"
-      "    \"filskalang.prt\"() <{subprogramName = \"main\"}> : () -> ()\n"
-      "  }) : () -> ()\n"
-      "}) : () -> ()\n";
+  auto Expected = R"("builtin.module"() ({
+  "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
+    "filskalang.prt"() <{subprogramName = "main"}> : () -> ()
+  }) : () -> ()
+}) : () -> ()
+)";
 
   RunTest(Src, Expected);
 }
@@ -86,13 +85,13 @@ TEST(CodeGenTest, Set) {
     }
     )";
 
-  auto Expected = "\"builtin.module\"() ({\n"
-                  "  \"filskalang.subprogram\"() <{function_type = () -> (), "
-                  "sym_name = \"main\"}> ({\n"
-                  "    \"filskalang.set\"() <{subprogramName = \"main\", value "
-                  "= 1.000000e+01 : f64}> : () -> ()\n"
-                  "  }) : () -> ()\n"
-                  "}) : () -> ()\n";
+  auto Expected = R"("builtin.module"() ({
+  "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
+    "filskalang.set"() <{subprogramName = "main", value "
+= 1.000000e+01 : f64}> : () -> ()
+  }) : () -> ()
+}) : () -> ()\n
+)";
 
   RunTest(Src, Expected);
 }
@@ -108,14 +107,14 @@ TEST(CodeGenTest, MultipleInstructions) {
     )";
 
   auto Expected =
-      "\"builtin.module\"() ({\n"
-      "  \"filskalang.subprogram\"() <{function_type = () -> (), "
-      "sym_name = \"main\"}> ({\n"
-      "    \"filskalang.set\"() <{subprogramName = \"main\", value "
-      "= 1.000000e+01 : f64}> : () -> ()\n"
-      "    \"filskalang.prt\"() <{subprogramName = \"main\"}> : () -> ()\n"
-      "  }) : () -> ()\n"
-      "}) : () -> ()\n";
+      R"("builtin.module"() ({
+  "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
+    "filskalang.set"() <{subprogramName = "main", value "
+= 1.000000e+01 : f64}> : () -> ()
+    "filskalang.prt"() <{subprogramName = "main"}> : () -> ()
+  }) : () -> ()
+}) : () -> ()
+)";
 
   RunTest(Src, Expected);
 }
