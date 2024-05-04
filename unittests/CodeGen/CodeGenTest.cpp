@@ -40,7 +40,7 @@ void RunTest(const char *Src, const char *Expected) {
 
 // subprogram
 
-TEST(ParserTest, Simple) {
+TEST(CodeGenTest, Simple) {
   auto Src = R"(
     { main }
     )";
@@ -59,7 +59,7 @@ TEST(ParserTest, Simple) {
 
 // nullary instructions
 
-TEST(ParserTest, Prt) {
+TEST(CodeGenTest, Prt) {
   auto Src = R"(
     { main
       prt
@@ -79,7 +79,7 @@ TEST(ParserTest, Prt) {
 
 // unary instructions
 
-TEST(ParserTest, Set) {
+TEST(CodeGenTest, Set) {
   auto Src = R"(
     { main
       set,10
@@ -99,7 +99,7 @@ TEST(ParserTest, Set) {
 
 // multiple instructions
 
-TEST(ParserTest, MultipleInstructions) {
+TEST(CodeGenTest, MultipleInstructions) {
   auto Src = R"(
     { main
       set,10
