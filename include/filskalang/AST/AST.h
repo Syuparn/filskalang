@@ -143,8 +143,6 @@ private:
   Location Loc;
   std::vector<Subprogram *> Subprograms;
 
-  // TODO: separate main from the others
-
 public:
   Program(Location Loc, std::vector<Subprogram *> Subprograms)
       : Loc(Loc), Subprograms(Subprograms) {}
