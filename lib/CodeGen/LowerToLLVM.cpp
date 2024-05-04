@@ -24,6 +24,24 @@ namespace {
 std::unordered_map<std::string, mlir::TypedValue<::mlir::LLVM::LLVMPointerType>>
     SubprogramMemory;
 
+class HltOpLowering : public mlir::ConversionPattern {
+public:
+  explicit HltOpLowering(mlir::MLIRContext *Context)
+      : ConversionPattern(mlir::filskalang::HltOp::getOperationName(), 1,
+                          Context) {}
+
+  mlir::LogicalResult
+  matchAndRewrite(mlir::Operation *Op, mlir::ArrayRef<mlir::Value> Operands,
+                  mlir::ConversionPatternRewriter &Rewriter) const override {
+
+    // TODO: add returnop
+
+    // Notify the rewriter that this operation has been removed.
+    Rewriter.eraseOp(Op);
+    return mlir::success();
+  }
+};
+
 class PrtOpLowering : public mlir::ConversionPattern {
 public:
   explicit PrtOpLowering(mlir::MLIRContext *Context)
@@ -42,7 +60,7 @@ public:
     // Get a symbol reference to the printf function, inserting it if necessary.
     auto PrintfRef = getOrInsertPrintf(Rewriter, ParentModule);
     mlir::Value FormatSpecifierCst = getOrCreateGlobalString(
-        Loc, Rewriter, "frmt_spec", mlir::StringRef("%f \0", 4), ParentModule);
+        Loc, Rewriter, "frmt_spec", mlir::StringRef("%f\0", 3), ParentModule);
 
     auto MemoryPointer = SubprogramMemory.at(PrtOp.getSubprogramName().str());
 
@@ -217,6 +235,7 @@ void FilskalangToLLVMLoweringPass::runOnOperation() {
 
   // lower from filskalang dialect
   Patterns.add<SubprogramOpLowering>(&getContext());
+  Patterns.add<HltOpLowering>(&getContext());
   Patterns.add<PrtOpLowering>(&getContext());
   Patterns.add<SetOpLowering>(&getContext());
 

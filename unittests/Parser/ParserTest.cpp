@@ -59,6 +59,18 @@ TEST(ParserTest, Prt) {
   RunTest(Src, Expected);
 }
 
+TEST(ParserTest, Hlt) {
+  auto Src = R"(
+    { main
+      hlt
+    }
+    )";
+
+  auto Expected = "(main (OP_HLT) ) ";
+
+  RunTest(Src, Expected);
+}
+
 // unary instructions
 
 TEST(ParserTest, Set) {

@@ -44,6 +44,9 @@ void Sema::actOnNullaryInstruction(
 
   ast::NullaryInstruction::NullaryOperator Op;
   switch (OperatorKind) {
+  case tok::kw_hlt:
+    Op = ast::NullaryInstruction::OP_HLT;
+    break;
   case tok::kw_prt:
     Op = ast::NullaryInstruction::OP_PRT;
     break;

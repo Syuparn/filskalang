@@ -59,6 +59,7 @@ public:
 class NullaryInstruction : public Instruction {
 public:
   enum NullaryOperator {
+    OP_HLT,
     OP_PRT,
   };
 

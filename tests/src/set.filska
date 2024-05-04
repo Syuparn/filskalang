@@ -1,0 +1,5 @@
+{ main
+    set,10
+    prt
+    hlt
+}

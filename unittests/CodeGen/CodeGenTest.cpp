@@ -59,6 +59,23 @@ TEST(CodeGenTest, Simple) {
 
 // nullary instructions
 
+TEST(CodeGenTest, Hlt) {
+  auto Src = R"(
+    { main
+      hlt
+    }
+    )";
+
+  auto Expected = R"("builtin.module"() ({
+  "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
+    "filskalang.hlt"() : () -> ()
+  }) : () -> ()
+}) : () -> ()
+)";
+
+  RunTest(Src, Expected);
+}
+
 TEST(CodeGenTest, Prt) {
   auto Src = R"(
     { main
@@ -87,10 +104,9 @@ TEST(CodeGenTest, Set) {
 
   auto Expected = R"("builtin.module"() ({
   "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
-    "filskalang.set"() <{subprogramName = "main", value "
-= 1.000000e+01 : f64}> : () -> ()
+    "filskalang.set"() <{subprogramName = "main", value = 1.000000e+01 : f64}> : () -> ()
   }) : () -> ()
-}) : () -> ()\n
+}) : () -> ()
 )";
 
   RunTest(Src, Expected);
@@ -109,8 +125,7 @@ TEST(CodeGenTest, MultipleInstructions) {
   auto Expected =
       R"("builtin.module"() ({
   "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
-    "filskalang.set"() <{subprogramName = "main", value "
-= 1.000000e+01 : f64}> : () -> ()
+    "filskalang.set"() <{subprogramName = "main", value = 1.000000e+01 : f64}> : () -> ()
     "filskalang.prt"() <{subprogramName = "main"}> : () -> ()
   }) : () -> ()
 }) : () -> ()

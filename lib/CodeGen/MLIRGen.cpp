@@ -61,9 +61,18 @@ private:
          Subprogram.getInstructions()) {
       switch (Instruction->getKind()) {
       case filskalang::ast::Instruction::IK_Nullary: {
-        mlirGenPrt(
-            *llvm::cast<filskalang::ast::NullaryInstruction>(Instruction),
-            Subprogram.getName());
+        auto Nullary =
+            llvm::cast<filskalang::ast::NullaryInstruction>(Instruction);
+        switch (Nullary->getOperator()) {
+        case filskalang::ast::NullaryInstruction::OP_PRT: {
+          mlirGenPrt(*Nullary, Subprogram.getName());
+          break;
+        }
+        case filskalang::ast::NullaryInstruction::OP_HLT: {
+          mlirGenHlt(*Nullary);
+          break;
+        }
+        }
         break;
       }
       case filskalang::ast::Instruction::IK_Unary: {
@@ -78,6 +87,12 @@ private:
     }
 
     return Sub;
+  }
+
+  mlir::filskalang::HltOp
+  mlirGenHlt(filskalang::ast::NullaryInstruction &Instruction) {
+    mlir::Location Loc = Instruction.getLocation().getLocation(Builder);
+    return Builder.create<mlir::filskalang::HltOp>(Loc);
   }
 
   mlir::filskalang::PrtOp

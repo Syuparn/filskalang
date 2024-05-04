@@ -29,6 +29,13 @@ class Filskalang_Op<string mnemonic, list<Trait> traits = []> :
 
 // Nullary Operations
 
+def HltOp : Filskalang_Op<"hlt"> {
+  let summary = "halt operation";
+  let description = [{
+    The "filskalang.hlt" builtin operation represents the "hlt" instruction
+  }];
+}
+
 def PrtOp : Filskalang_Op<"prt"> {
   let summary = "print operation";
   let description = [{
