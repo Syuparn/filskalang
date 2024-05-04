@@ -106,5 +106,11 @@
   "command": "/usr/local/bin/clang++ -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/syuparn/filskalang/include -I/usr/lib/llvm-18/include -isystem /home/syuparn/filskalang/_deps/googletest-src/googletest/include -isystem /home/syuparn/filskalang/_deps/googletest-src/googletest  -fPIC -fno-semantic-interposition -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -Wctad-maybe-unsupported -fdiagnostics-color -g -std=gnu++17   -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS  -fno-exceptions -funwind-tables -o unittests/Parser/CMakeFiles/parser_test.dir/ParserErrorTest.cpp.o -c /home/syuparn/filskalang/unittests/Parser/ParserErrorTest.cpp",
   "file": "/home/syuparn/filskalang/unittests/Parser/ParserErrorTest.cpp",
   "output": "unittests/Parser/CMakeFiles/parser_test.dir/ParserErrorTest.cpp.o"
+},
+{
+  "directory": "/home/syuparn/filskalang",
+  "command": "/usr/local/bin/clang++ -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/syuparn/filskalang/include -I/usr/lib/llvm-18/include -isystem /home/syuparn/filskalang/_deps/googletest-src/googletest/include -isystem /home/syuparn/filskalang/_deps/googletest-src/googletest  -fPIC -fno-semantic-interposition -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -Wimplicit-fallthrough -Wcovered-switch-default -Wno-noexcept-type -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wsuggest-override -Wstring-conversion -Wmisleading-indentation -Wctad-maybe-unsupported -fdiagnostics-color -g -std=gnu++17   -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS  -fno-exceptions -funwind-tables -o unittests/CodeGen/CMakeFiles/codegen_test.dir/CodeGenTest.cpp.o -c /home/syuparn/filskalang/unittests/CodeGen/CodeGenTest.cpp",
+  "file": "/home/syuparn/filskalang/unittests/CodeGen/CodeGenTest.cpp",
+  "output": "unittests/CodeGen/CMakeFiles/codegen_test.dir/CodeGenTest.cpp.o"
 }
 ]
