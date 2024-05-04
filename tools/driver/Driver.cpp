@@ -126,7 +126,7 @@ int lowerToLLVM(mlir::OwningOpRef<mlir::ModuleOp> &Module) {
     llvm::errs() << "Failed to optimize LLVM IR " << err << "\n";
     return -1;
   }
-  llvm::errs() << *LLVMModule << "\n";
+  llvm::outs() << *LLVMModule << "\n";
   return 0;
 }
 
