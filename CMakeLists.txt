@@ -42,7 +42,7 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 
-set(FILSKALANG_VERSION_STRING "0.1")
+set(FILSKALANG_VERSION_STRING "0.1.0")
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/include/filskalang/Basic/Version.inc.in
   ${CMAKE_CURRENT_BINARY_DIR}/include/filskalang/Basic/Version.inc)

@@ -39,8 +39,6 @@ $ cmake --build .
 # run
 
 ```bash
-$ ./bin/filskalang --version
-Filskalang 0.1
 $ ./bin/filskalang example/simple.filska -emit llvm | lli
 10.000000
 ```
