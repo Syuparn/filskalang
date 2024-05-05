@@ -77,7 +77,7 @@ $ ./run_tests.sh
 $ ./bin/filskalang --mlir-print-ir-after-all example/simple.filska -emit llvm
 ```
 
-## troubleshooting a segmentation fault
+## troubleshoot a segmentation fault
 
 ```bash
 $ lldb ./bin/filskalang
