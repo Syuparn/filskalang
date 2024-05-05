@@ -41,7 +41,23 @@ $ cmake --build .
 ```bash
 $ ./bin/filskalang --version
 Filskalang 0.1
-$ ./bin/filskalang example/simple.filska -emit llvm 2>&1 | lli
+$ ./bin/filskalang example/simple.filska -emit llvm | lli
+10.000000
+```
+
+# compile to binary
+
+```bash
+# use script
+$ ./filskac example/simple.filska
+$ ./example/simple
+10.000000
+
+# or run below manually
+$ ./bin/filskalang example/simple.filska -emit llvm > example/simple.filska.llir
+$ llc example/simple.filska.llir -o example/simple.filska.llir.s
+$ clang -no-pie example/simple.filska.llir.s example/simple
+$ ./example/simple
 10.000000
 ```
 

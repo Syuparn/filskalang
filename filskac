@@ -1,0 +1,48 @@
+#!/bin/bash
+
+set -e
+
+function usage() {
+    echo "Filska compiler"
+    echo "filskac [-o sample] sample.filska"
+} 
+
+while getopts ":hab:" OPT
+do
+    case $OPT in
+        o) OUTPUT=true;OUTPUT_FILE_OVERRIDE=$OPTARG ;;
+        h) HELP=true;;
+    esac
+done
+shift $(($OPTIND - 1))
+
+SRC_FILE_NAME=$1
+
+if [ -n "$HELP" ]; then
+    usage
+    exit 0
+fi
+
+if [ -z "$SRC_FILE_NAME" ]; then
+    echo "error: source file must be specified"
+    usage
+    exit 1
+fi
+
+OUTPUT_FILE_NAME=${SRC_FILE_NAME%.filska}
+if [ -n "$OUTPUT_FILE_OVERRIDE" ]; then
+    OUTPUT_FILE_NAME=$OUTPUT_FILE_OVERRIDE
+fi
+
+if [ $OUTPUT_FILE_NAME = $SRC_FILE_NAME ]; then
+    echo "error: stop compiling because the output file name '$OUTPUT_FILE_NAME' is same as the src file name"
+    echo "make sure that src file name is Filska source code (*.filska)"
+    exit 1
+fi
+
+LLIR_FILE_NAME=${SRC_FILE_NAME}.llir
+ASSEMBLY_FILE_NAME=${LLIR_FILE_NAME}.s
+
+./bin/filskalang $SRC_FILE_NAME -emit llvm > $LLIR_FILE_NAME
+llc $LLIR_FILE_NAME -o $ASSEMBLY_FILE_NAME
+clang -no-pie $ASSEMBLY_FILE_NAME -o $OUTPUT_FILE_NAME

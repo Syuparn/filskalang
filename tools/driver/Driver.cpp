@@ -61,7 +61,7 @@ int initLowering(mlir::OwningOpRef<mlir::ModuleOp> &Module) {
 
   // Apply any generic pass manager command line options and run the pipeline.
   if (mlir::failed(mlir::applyPassManagerCLOptions(PM))) {
-    llvm::errs()
+    llvm::WithColor(llvm::errs())
         << "Failed apply pass manager options from command line options\n";
     return 4;
   }
@@ -75,7 +75,7 @@ int initLowering(mlir::OwningOpRef<mlir::ModuleOp> &Module) {
   PM.addPass(mlir::LLVM::createDIScopeForLLVMFuncOpPass());
 
   if (mlir::failed(PM.run(*Module))) {
-    llvm::errs() << "Failed run pass manager\n";
+    llvm::WithColor(llvm::errs()) << "Failed run pass manager\n";
     return 4;
   }
   return 0;
@@ -83,7 +83,7 @@ int initLowering(mlir::OwningOpRef<mlir::ModuleOp> &Module) {
 
 int lowerToLLVM(mlir::OwningOpRef<mlir::ModuleOp> &Module) {
   if (int error = initLowering(Module)) {
-    llvm::errs() << "Failed to initialize lowering\n";
+    llvm::WithColor(llvm::errs()) << "Failed to initialize lowering\n";
     return error;
   }
 
@@ -95,7 +95,7 @@ int lowerToLLVM(mlir::OwningOpRef<mlir::ModuleOp> &Module) {
   llvm::LLVMContext LLVMContext;
   auto LLVMModule = mlir::translateModuleToLLVMIR(*Module, LLVMContext);
   if (!LLVMModule) {
-    llvm::errs() << "Failed to emit LLVM IR\n";
+    llvm::WithColor(llvm::errs()) << "Failed to emit LLVM IR\n";
     return -1;
   }
 
@@ -106,13 +106,14 @@ int lowerToLLVM(mlir::OwningOpRef<mlir::ModuleOp> &Module) {
   // Create target machine and configure the LLVM Module
   auto TMBuilderOrError = llvm::orc::JITTargetMachineBuilder::detectHost();
   if (!TMBuilderOrError) {
-    llvm::errs() << "Could not create JITTargetMachineBuilder\n";
+    llvm::WithColor(llvm::errs())
+        << "Could not create JITTargetMachineBuilder\n";
     return -1;
   }
 
   auto TMOrError = TMBuilderOrError->createTargetMachine();
   if (!TMOrError) {
-    llvm::errs() << "Could not create TargetMachine\n";
+    llvm::WithColor(llvm::errs()) << "Could not create TargetMachine\n";
     return -1;
   }
   mlir::ExecutionEngine::setupTargetTripleAndDataLayout(LLVMModule.get(),
@@ -123,7 +124,8 @@ int lowerToLLVM(mlir::OwningOpRef<mlir::ModuleOp> &Module) {
       /*optLevel=*/EnableOpt ? 3 : 0, /*sizeLevel=*/0,
       /*targetMachine=*/nullptr);
   if (auto err = optPipeline(LLVMModule.get())) {
-    llvm::errs() << "Failed to optimize LLVM IR " << err << "\n";
+    llvm::WithColor(llvm::errs())
+        << "Failed to optimize LLVM IR " << err << "\n";
     return -1;
   }
   llvm::outs() << *LLVMModule << "\n";
@@ -143,7 +145,7 @@ int main(int Argc, const char **Argv) {
   llvm::ErrorOr<std::unique_ptr<llvm::MemoryBuffer>> FileOrErr =
       llvm::MemoryBuffer::getFile(InputFile);
   if (std::error_code BufferError = FileOrErr.getError()) {
-    llvm::WithColor::error(llvm::errs(), Argv[0])
+    llvm::WithColor::error(llvm::errs())
         << "Error reading " << InputFile << ": " << BufferError.message()
         << "\n";
     return 1;
