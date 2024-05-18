@@ -4,6 +4,7 @@
 include "mlir/IR/OpBase.td"
 include "mlir/Interfaces/FunctionInterfaces.td"
 include "mlir/IR/SymbolInterfaces.td"
+include "mlir/Interfaces/CastInterfaces.td"
 include "mlir/Interfaces/SideEffectInterfaces.td"
 
 def Filskalang_Dialect : Dialect {
@@ -42,7 +43,7 @@ def PrtOp : Filskalang_Op<"prt"> {
     The "filskalang.prt" builtin operation represents the "prt" instruction
   }];
 
-  let arguments = (ins SymbolNameAttr:$subprogramName);
+  let arguments = (ins F64:$arg);
 }
 
 // Unary Operations
@@ -54,6 +55,49 @@ def SetOp : Filskalang_Op<"set"> {
   }];
 
   let arguments = (ins F64Attr:$value, SymbolNameAttr:$subprogramName);
+}
+
+def ProgramOp : Filskalang_Op<"program", [
+    FunctionOpInterface,
+  ]> {
+  let summary = "program operation";
+  let description = [{
+    The "filskalang.program" operation represents a program.
+    This must have no parameters and return values.
+  }];
+
+  // NOTE: dummy parameters and return values are required for FunctionOpInterface
+  let arguments = (ins
+    SymbolNameAttr:$sym_name,
+    TypeAttrOf<FunctionType>:$function_type,
+    OptionalAttr<DictArrayAttr>:$arg_attrs,
+    OptionalAttr<DictArrayAttr>:$res_attrs
+  );
+
+  let regions = (region AnyRegion:$body);
+
+  let builders = [
+    OpBuilder<(ins
+      "FunctionType":$type,
+      CArg<"ArrayRef<NamedAttribute>", "{}">:$attrs
+    )>
+  ];
+
+  let extraClassDeclaration = [{
+    //===------------------------------------------------------------------===//
+    // ProgramOpInterface Methods
+    //===------------------------------------------------------------------===//
+
+    /// Returns the argument types of this function.
+    ArrayRef<Type> getArgumentTypes() { return getFunctionType().getInputs(); }
+
+    /// Returns the result types of this function.
+    ArrayRef<Type> getResultTypes() { return getFunctionType().getResults(); }
+
+    Region *getCallableRegion() { return &getBody(); }
+  }];
+
+  let skipDefaultBuilders = 1;
 }
 
 def SubprogramOp : Filskalang_Op<"subprogram", [

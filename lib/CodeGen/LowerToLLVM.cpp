@@ -62,7 +62,7 @@ public:
     mlir::Value FormatSpecifierCst = getOrCreateGlobalString(
         Loc, Rewriter, "frmt_spec", mlir::StringRef("%f\0", 3), ParentModule);
 
-    auto MemoryPointer = SubprogramMemory.at(PrtOp.getSubprogramName().str());
+    auto MemoryPointer = SubprogramMemory.at("");
 
     // Generate a call to printf
     auto Load = Rewriter.create<mlir::LLVM::LoadOp>(

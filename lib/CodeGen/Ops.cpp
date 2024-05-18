@@ -17,3 +17,13 @@ void mlir::filskalang::SubprogramOp::build(
   // populate the state of our FuncOp, and create an entry block.
   buildWithEntryBlock(builder, state, name, type, attrs, type.getInputs());
 }
+
+void mlir::filskalang::ProgramOp::build(
+    mlir::OpBuilder &builder, mlir::OperationState &state,
+    mlir::FunctionType type, llvm::ArrayRef<mlir::NamedAttribute> attrs) {
+
+  // FunctionOpInterface provides a convenient `build` method that will
+  // populate the state of our FuncOp, and create an entry block.
+  buildWithEntryBlock(builder, state, llvm::StringRef("program"), type, attrs,
+                      type.getInputs());
+}

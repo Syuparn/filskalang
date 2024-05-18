@@ -23,12 +23,43 @@ class MLIRGenImpl {
 private:
   mlir::ModuleOp Module;
   mlir::OpBuilder Builder;
+  std::unordered_map<std::string,
+                     mlir::TypedValue<::mlir::LLVM::LLVMPointerType>>
+      SubprogramMemory;
 
 public:
   MLIRGenImpl(mlir::MLIRContext &Context) : Builder(&Context) {}
 
   mlir::ModuleOp mlirGen(filskalang::ast::Program &Program) {
-    Module = mlir::ModuleOp::create(Builder.getUnknownLoc());
+    mlir::Location Loc = Program.getLocation().getLocation(Builder);
+    Module = mlir::ModuleOp::create(Loc);
+
+    // create dummy parameters
+    // NOTE: since subprogram does not have parameters, this must be empty
+    llvm::SmallVector<mlir::Type, 0> ArgTypes;
+    auto funcType = Builder.getFunctionType(ArgTypes, std::nullopt);
+
+    // start subprogram
+    Builder.setInsertionPointToEnd(Module.getBody());
+    mlir::filskalang::ProgramOp ProgramOp =
+        Builder.create<mlir::filskalang::ProgramOp>(Loc, funcType);
+
+    // program body
+    mlir::Block &EntryBlock = ProgramOp.front();
+    Builder.setInsertionPointToStart(&EntryBlock);
+
+    // initialize subprogram memories
+    // NOTE: alloca should be executed first
+    for (filskalang::ast::Subprogram *Subprogram : Program.getSubprograms()) {
+      auto *Context = ProgramOp.getContext();
+
+      mlir::Value Cst0 = Builder.create<mlir::LLVM::ConstantOp>(
+          Loc, Builder.getF64Type(), Builder.getIndexAttr(0));
+      auto Alloca = Builder.create<mlir::LLVM::AllocaOp>(
+          Loc, /*resultType*/ mlir::LLVM::LLVMPointerType::get(Context),
+          /*elementType*/ Builder.getF64Type(), Cst0);
+      SubprogramMemory[Subprogram->getName().str()] = Alloca.getRes();
+    }
 
     for (filskalang::ast::Subprogram *Subprogram : Program.getSubprograms()) {
       mlirGen(*Subprogram);
@@ -99,7 +130,17 @@ private:
   mlirGenPrt(filskalang::ast::NullaryInstruction &Instruction,
              llvm::StringRef SubprogramName) {
     mlir::Location Loc = Instruction.getLocation().getLocation(Builder);
-    return Builder.create<mlir::filskalang::PrtOp>(Loc, SubprogramName);
+
+    // argument (subprogram `m`)
+    auto MemoryPointer = SubprogramMemory.at(SubprogramName.str());
+    auto Val = Builder.create<mlir::LLVM::LoadOp>(Loc, Builder.getF64Type(),
+                                                  MemoryPointer);
+
+    mlir::Value Cst0 = Builder.create<mlir::LLVM::ConstantOp>(
+        Loc, Builder.getF64Type(), Builder.getIndexAttr(0));
+    auto FVal = Builder.create<mlir::LLVM::FAddOp>(Loc, Val, Cst0);
+
+    return Builder.create<mlir::filskalang::PrtOp>(Loc, FVal);
   }
 
   mlir::filskalang::SetOp
