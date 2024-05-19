@@ -46,6 +46,9 @@ TEST(CodeGenTest, Simple) {
     )";
 
   auto Expected = R"("builtin.module"() ({
+  "filskalang.program"() <{function_type = () -> (), sym_name = "program"}> ({
+  ^bb0:
+  }) : () -> ()
   "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
   ^bb0:
   }) : () -> ()
@@ -68,8 +71,12 @@ TEST(CodeGenTest, MultipleSubprograms) {
     )";
 
   auto Expected = R"("builtin.module"() ({
+  "filskalang.program"() <{function_type = () -> (), sym_name = "program"}> ({
+  ^bb0:
+  }) : () -> ()
   "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
-    "filskalang.prt"() <{subprogramName = "main"}> : () -> ()
+    %0 = "filskalang.memory"() <{name = "main"}> : () -> f64
+    "filskalang.prt"(%0) : (f64) -> ()
   }) : () -> ()
   "filskalang.subprogram"() <{function_type = () -> (), sym_name = "another"}> ({
     "filskalang.set"() <{subprogramName = "another", value = 1.000000e+01 : f64}> : () -> ()
@@ -90,6 +97,9 @@ TEST(CodeGenTest, Hlt) {
     )";
 
   auto Expected = R"("builtin.module"() ({
+  "filskalang.program"() <{function_type = () -> (), sym_name = "program"}> ({
+  ^bb0:
+  }) : () -> ()
   "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
     "filskalang.hlt"() : () -> ()
   }) : () -> ()
@@ -107,8 +117,12 @@ TEST(CodeGenTest, Prt) {
     )";
 
   auto Expected = R"("builtin.module"() ({
+  "filskalang.program"() <{function_type = () -> (), sym_name = "program"}> ({
+  ^bb0:
+  }) : () -> ()
   "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
-    "filskalang.prt"() <{subprogramName = "main"}> : () -> ()
+    %0 = "filskalang.memory"() <{name = "main"}> : () -> f64
+    "filskalang.prt"(%0) : (f64) -> ()
   }) : () -> ()
 }) : () -> ()
 )";
@@ -126,6 +140,9 @@ TEST(CodeGenTest, Set) {
     )";
 
   auto Expected = R"("builtin.module"() ({
+  "filskalang.program"() <{function_type = () -> (), sym_name = "program"}> ({
+  ^bb0:
+  }) : () -> ()
   "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
     "filskalang.set"() <{subprogramName = "main", value = 1.000000e+01 : f64}> : () -> ()
   }) : () -> ()
@@ -147,9 +164,13 @@ TEST(CodeGenTest, MultipleInstructions) {
 
   auto Expected =
       R"("builtin.module"() ({
+  "filskalang.program"() <{function_type = () -> (), sym_name = "program"}> ({
+  ^bb0:
+  }) : () -> ()
   "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
     "filskalang.set"() <{subprogramName = "main", value = 1.000000e+01 : f64}> : () -> ()
-    "filskalang.prt"() <{subprogramName = "main"}> : () -> ()
+    %0 = "filskalang.memory"() <{name = "main"}> : () -> f64
+    "filskalang.prt"(%0) : (f64) -> ()
   }) : () -> ()
 }) : () -> ()
 )";

@@ -62,15 +62,9 @@ public:
     mlir::Value FormatSpecifierCst = getOrCreateGlobalString(
         Loc, Rewriter, "frmt_spec", mlir::StringRef("%f\0", 3), ParentModule);
 
-    auto MemoryPointer = SubprogramMemory.at("");
-
-    // Generate a call to printf
-    auto Load = Rewriter.create<mlir::LLVM::LoadOp>(
-        Loc, mlir::Float64Type::get(Context), MemoryPointer);
-
     Rewriter.create<mlir::LLVM::CallOp>(
         Loc, getPrintfType(Context), PrintfRef,
-        mlir::ArrayRef<mlir::Value>({FormatSpecifierCst, Load}));
+        mlir::ArrayRef<mlir::Value>({FormatSpecifierCst, PrtOp.getArg()}));
 
     // Notify the rewriter that this operation has been removed.
     Rewriter.eraseOp(Op);
@@ -160,6 +154,42 @@ public:
   }
 };
 
+class MemoryOpLowering : public mlir::ConversionPattern {
+public:
+  explicit MemoryOpLowering(mlir::MLIRContext *Context)
+      : ConversionPattern(mlir::filskalang::MemoryOp::getOperationName(), 1,
+                          Context) {}
+
+  mlir::LogicalResult
+  matchAndRewrite(mlir::Operation *Op, mlir::ArrayRef<mlir::Value> Operands,
+                  mlir::ConversionPatternRewriter &Rewriter) const override {
+    auto Loc = Op->getLoc();
+    auto MemoryOp = mlir::cast<mlir::filskalang::MemoryOp>(Op);
+
+    auto MemoryPointer = SubprogramMemory.at(MemoryOp.getName().str());
+    auto LoadOp = Rewriter.create<mlir::LLVM::LoadOp>(
+        Loc, Rewriter.getF64Type(), MemoryPointer);
+
+    Rewriter.replaceOp(Op, LoadOp->getResults());
+    return mlir::success();
+  }
+};
+
+class ProgramOpLowering : public mlir::ConversionPattern {
+public:
+  explicit ProgramOpLowering(mlir::MLIRContext *Context)
+      : ConversionPattern(mlir::filskalang::ProgramOp::getOperationName(), 1,
+                          Context) {}
+
+  mlir::LogicalResult
+  matchAndRewrite(mlir::Operation *Op, mlir::ArrayRef<mlir::Value> Operands,
+                  mlir::ConversionPatternRewriter &Rewriter) const override {
+    // TODO: initialize
+    Rewriter.eraseOp(Op);
+    return mlir::success();
+  }
+};
+
 class SubprogramOpLowering : public mlir::ConversionPattern {
 public:
   explicit SubprogramOpLowering(mlir::MLIRContext *Context)
@@ -234,10 +264,12 @@ void FilskalangToLLVMLoweringPass::runOnOperation() {
   // TODO: add transitive lowering patterns
 
   // lower from filskalang dialect
+  Patterns.add<ProgramOpLowering>(&getContext());
   Patterns.add<SubprogramOpLowering>(&getContext());
   Patterns.add<HltOpLowering>(&getContext());
   Patterns.add<PrtOpLowering>(&getContext());
   Patterns.add<SetOpLowering>(&getContext());
+  Patterns.add<MemoryOpLowering>(&getContext());
 
   // completely lower to LLVM
   auto Module = getOperation();

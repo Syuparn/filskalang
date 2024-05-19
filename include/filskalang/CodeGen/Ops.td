@@ -28,6 +28,17 @@ def Filskalang_Dialect : Dialect {
 class Filskalang_Op<string mnemonic, list<Trait> traits = []> :
     Op<Filskalang_Dialect, mnemonic, traits>;
 
+// Memory Operations
+def MemoryOp : Filskalang_Op<"memory"> {
+  let summary = "memory operation";
+  let description = [{
+    The "filskalang.memory" builtin operation represents the value in the memory `x`, `y`, `z`, or `m`.
+  }];
+
+  let arguments = (ins SymbolNameAttr:$name);
+  let results = (outs F64);
+}
+
 // Nullary Operations
 
 def HltOp : Filskalang_Op<"hlt"> {
