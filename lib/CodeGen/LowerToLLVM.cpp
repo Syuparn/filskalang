@@ -23,6 +23,10 @@ namespace {
 // TODO: move to a member variable in any class
 std::unordered_map<std::string, mlir::TypedValue<::mlir::LLVM::LLVMPointerType>>
     SubprogramMemory;
+// TODO: move to a member variable in any class
+mlir::LLVM::LLVMFuncOp MainFunc;
+// TODO: move to a member variable in any class
+mlir::Block *ExitBlock;
 
 class HltOpLowering : public mlir::ConversionPattern {
 public:
@@ -33,8 +37,20 @@ public:
   mlir::LogicalResult
   matchAndRewrite(mlir::Operation *Op, mlir::ArrayRef<mlir::Value> Operands,
                   mlir::ConversionPatternRewriter &Rewriter) const override {
+    auto Loc = Op->getLoc();
 
-    // TODO: add returnop
+    auto BrOp = Rewriter.create<mlir::LLVM::BrOp>(Loc, ExitBlock);
+
+    // HACK: delete terminator operator because each block can only have 1
+    // terminator
+    for (auto &Op : Rewriter.getBlock()->getOperations()) {
+      if (Op.isBeforeInBlock(BrOp)) {
+        continue;
+      }
+      Rewriter.eraseOp(&Op);
+    }
+
+    Rewriter.create<mlir::LLVM::BrOp>(Loc, ExitBlock);
 
     // Notify the rewriter that this operation has been removed.
     Rewriter.eraseOp(Op);
@@ -184,7 +200,38 @@ public:
   mlir::LogicalResult
   matchAndRewrite(mlir::Operation *Op, mlir::ArrayRef<mlir::Value> Operands,
                   mlir::ConversionPatternRewriter &Rewriter) const override {
-    // TODO: initialize
+    auto Loc = Op->getLoc();
+    auto *Context = Op->getContext();
+    mlir::filskalang::ProgramOp Program =
+        mlir::cast<mlir::filskalang::ProgramOp>(Op);
+
+    // NOTE: function name must be `main` because it is the entrypoint of LLVMIR
+    auto DummyType = mlir::LLVM::LLVMFunctionType::get(
+        mlir::LLVM::LLVMVoidType::get(Context), mlir::ArrayRef<mlir::Type>{});
+    auto Func = Rewriter.create<mlir::LLVM::LLVMFuncOp>(Loc, "main", DummyType);
+    Rewriter.inlineRegionBefore(Program.getBody(), Func.getBody(), Func.end());
+
+    // HACK: set Func to global variable so that subprogram can insert ops in it
+    MainFunc = Func;
+
+    // order of blocks in function `main`
+    // - init: initialization operations
+    // - exit: only returnOp for hltOp
+    // - main: main subprogram
+    auto MainBlock = &MainFunc.getBody().front();
+    // HACK: set ExitBlock to global variable so that hltOp can refer to it
+    ExitBlock = Rewriter.createBlock(MainBlock);
+    auto InitBlock = Rewriter.createBlock(ExitBlock);
+
+    Rewriter.setInsertionPointToEnd(ExitBlock);
+    Rewriter.create<mlir::LLVM::ReturnOp>(Loc, mlir::ArrayRef<mlir::Value>());
+
+    Rewriter.setInsertionPointToEnd(InitBlock);
+    // jump to subprogram `main`
+    Rewriter.create<mlir::LLVM::BrOp>(Loc, MainBlock);
+
+    Rewriter.setInsertionPointToStart(Program->getBlock());
+
     Rewriter.eraseOp(Op);
     return mlir::success();
   }
@@ -204,21 +251,8 @@ public:
 
     mlir::filskalang::SubprogramOp Subprogram =
         mlir::cast<mlir::filskalang::SubprogramOp>(Op);
-    Rewriter.setInsertionPointToEnd(Subprogram->getBlock());
 
-    // HACK: since builtin.module cannot hold multiple blocks, inline
-    // subprograms into a function and call it from the module
-    auto DummyType = mlir::LLVM::LLVMFunctionType::get(
-        mlir::LLVM::LLVMVoidType::get(Context), mlir::ArrayRef<mlir::Type>{});
-    // NOTE: name should be "main" because LLVM IR recognize the name as an
-    // entrypoint
-    auto Func = Rewriter.create<mlir::LLVM::LLVMFuncOp>(Loc, "main", DummyType);
-    Rewriter.inlineRegionBefore(Subprogram.getBody(), Func.getBody(),
-                                Func.end());
-    mlir::Block *EntryBlock = &Func.getBody().front();
-
-    // define subprogram register `m`
-    Rewriter.setInsertionPointToStart(EntryBlock);
+    Rewriter.setInsertionPointToStart(&MainFunc.getBody().front());
     mlir::Value Cst0 = Rewriter.create<mlir::LLVM::ConstantOp>(
         Loc, Rewriter.getI64Type(), Rewriter.getIndexAttr(0));
     auto Alloca = Rewriter.create<mlir::LLVM::AllocaOp>(
@@ -228,12 +262,21 @@ public:
     // `m` is referred)
     SubprogramMemory[Subprogram.getName().str()] = Alloca.getRes();
 
-    // add return because llvm block must ends with terminator operator
-    // TODO: replace with infinite loop
-    Rewriter.setInsertionPointToEnd(EntryBlock);
-    Rewriter.create<mlir::LLVM::ReturnOp>(Loc, mlir::ArrayRef<mlir::Value>());
+    auto MainBlock = &MainFunc.getBody().back();
 
-    Rewriter.setInsertionPointToEnd(Subprogram->getBlock());
+    mlir::Block *Blk;
+    if (Subprogram.getName().str() == "main") {
+      Blk = MainBlock;
+    } else {
+      Blk = Rewriter.createBlock(MainBlock);
+    }
+
+    Rewriter.inlineBlockBefore(&Subprogram.getBody().front(), Blk,
+                               Blk->getTerminator()->getIterator());
+
+    Rewriter.setInsertionPointToEnd(Blk);
+    // NOTE: subprogram in Filska loops infinitely
+    Rewriter.create<mlir::LLVM::BrOp>(Loc, Blk);
 
     // Notify the rewriter that this operation has been removed.
     Rewriter.eraseOp(Op);
