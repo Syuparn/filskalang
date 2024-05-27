@@ -43,14 +43,17 @@ public:
 
     // HACK: delete terminator operator because each block can only have 1
     // terminator
+    bool IsAfter = false;
     for (auto &Op : Rewriter.getBlock()->getOperations()) {
-      if (Op.isBeforeInBlock(BrOp)) {
+      if (!IsAfter && !Op.isBeforeInBlock(BrOp)) {
+        // not before and not after means BrOp itself
+        IsAfter = true;
         continue;
       }
-      Rewriter.eraseOp(&Op);
+      if (IsAfter) {
+        Rewriter.eraseOp(&Op);
+      }
     }
-
-    Rewriter.create<mlir::LLVM::BrOp>(Loc, ExitBlock);
 
     // Notify the rewriter that this operation has been removed.
     Rewriter.eraseOp(Op);
