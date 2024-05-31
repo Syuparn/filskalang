@@ -5,6 +5,11 @@ setup() {
   load 'test_helper/bats-assert/load'
 }
 
+@test "neg instruction" {
+  run bash -c './bin/filskalang tests/src/neg.filska -emit llvm | lli'
+  assert_output "-10.000000"
+}
+
 @test "prt instruction" {
   run bash -c './bin/filskalang tests/src/prt.filska -emit llvm | lli'
   assert_output "0.000000"

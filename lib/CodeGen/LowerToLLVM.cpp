@@ -9,13 +9,16 @@
 
 #include "filskalang/CodeGen/LowerToLLVM.h"
 #include "filskalang/CodeGen/Dialect.h"
+#include "mlir/Conversion/ArithToLLVM/ArithToLLVM.h"
 #include "mlir/Conversion/LLVMCommon/ConversionTarget.h"
+#include "mlir/Conversion/LLVMCommon/TypeConverter.h"
+#include "mlir/Dialect/Arith/IR/Arith.h"
 #include "mlir/Dialect/LLVMIR/LLVMDialect.h"
 #include "mlir/Dialect/LLVMIR/LLVMTypes.h"
 #include "mlir/IR/BuiltinOps.h"
 #include "mlir/IR/BuiltinTypes.h"
 #include "mlir/Pass/Pass.h"
-#include <llvm-18/llvm/ADT/APFloat.h>
+#include "llvm/ADT/APFloat.h"
 #include <memory>
 #include <unordered_map>
 
@@ -288,13 +291,52 @@ public:
   }
 };
 
+class MetaSetOpLowering : public mlir::ConversionPattern {
+public:
+  explicit MetaSetOpLowering(mlir::MLIRContext *Context)
+      : ConversionPattern(mlir::filskalang::MetaSetOp::getOperationName(), 1,
+                          Context) {}
+
+  mlir::LogicalResult
+  matchAndRewrite(mlir::Operation *Op, mlir::ArrayRef<mlir::Value> Operands,
+                  mlir::ConversionPatternRewriter &Rewriter) const override {
+    auto Loc = Op->getLoc();
+    auto MetaSetOp = mlir::cast<mlir::filskalang::MetaSetOp>(Op);
+
+    auto MemoryPointer =
+        SubprogramMemory.at(MetaSetOp.getSubprogramName().str());
+    Rewriter.create<mlir::LLVM::StoreOp>(Loc, MetaSetOp.getValue(),
+                                         MemoryPointer);
+
+    // Notify the rewriter that this operation has been removed.
+    Rewriter.eraseOp(Op);
+    return mlir::success();
+  }
+};
+
+class DummyTerminatorOpLowering : public mlir::ConversionPattern {
+public:
+  explicit DummyTerminatorOpLowering(mlir::MLIRContext *Context)
+      : ConversionPattern(
+            mlir::filskalang::DummyTerminatorOp::getOperationName(), 1,
+            Context) {}
+
+  mlir::LogicalResult
+  matchAndRewrite(mlir::Operation *Op, mlir::ArrayRef<mlir::Value> Operands,
+                  mlir::ConversionPatternRewriter &Rewriter) const override {
+    // NOTE: just delete this because it is just a placeholder of subprograms
+    Rewriter.eraseOp(Op);
+    return mlir::success();
+  }
+};
+
 struct FilskalangToLLVMLoweringPass
     : public mlir::PassWrapper<FilskalangToLLVMLoweringPass,
                                mlir::OperationPass<mlir::ModuleOp>> {
   MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(FilskalangToLLVMLoweringPass)
 
   void getDependentDialects(mlir::DialectRegistry &registry) const override {
-    registry.insert<mlir::LLVM::LLVMDialect>();
+    registry.insert<mlir::arith::ArithDialect, mlir::LLVM::LLVMDialect>();
   }
   void runOnOperation() final;
 };
@@ -305,9 +347,13 @@ void FilskalangToLLVMLoweringPass::runOnOperation() {
   mlir::LLVMConversionTarget Target(getContext());
   Target.addLegalOp<mlir::ModuleOp>();
 
+  mlir::LLVMTypeConverter TypeConverter(&getContext());
+
   // define lowering patterns
   mlir::RewritePatternSet Patterns(&getContext());
-  // TODO: add transitive lowering patterns
+
+  // transitive lowering patterns
+  mlir::arith::populateArithToLLVMConversionPatterns(TypeConverter, Patterns);
 
   // lower from filskalang dialect
   Patterns.add<ProgramOpLowering>(&getContext());
@@ -316,6 +362,8 @@ void FilskalangToLLVMLoweringPass::runOnOperation() {
   Patterns.add<PrtOpLowering>(&getContext());
   Patterns.add<SetOpLowering>(&getContext());
   Patterns.add<MemoryOpLowering>(&getContext());
+  Patterns.add<MetaSetOpLowering>(&getContext());
+  Patterns.add<DummyTerminatorOpLowering>(&getContext());
 
   // completely lower to LLVM
   auto Module = getOperation();

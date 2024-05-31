@@ -13,7 +13,7 @@ DIAG(err_expected, Error, "expected {0} but found {1}")
 DIAG(err_invalid_number_token, Error, "number literal must be int, float, or float with exponent")
 DIAG(err_invalid_argument_not_number, Error, "argument must be a number")
 
-DIAG(err_not_yet_implemented, Error, "module imports are not yet implemented")
+DIAG(err_not_yet_implemented, Error, "operator is not yet implemented")
 DIAG(err_unexpected, Error, "unexpected error occurred (may be a compiler bug)")
 DIAG(err_unknown_token, Error, "unknown token is found")
 DIAG(err_no_main, Error, "subprogram main does not exist")

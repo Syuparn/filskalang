@@ -47,6 +47,9 @@ void Sema::actOnNullaryInstruction(
   case tok::kw_hlt:
     Op = ast::NullaryInstruction::OP_HLT;
     break;
+  case tok::kw_neg:
+    Op = ast::NullaryInstruction::OP_NEG;
+    break;
   case tok::kw_prt:
     Op = ast::NullaryInstruction::OP_PRT;
     break;

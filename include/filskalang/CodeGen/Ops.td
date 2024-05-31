@@ -48,6 +48,16 @@ def HltOp : Filskalang_Op<"hlt"> {
   }];
 }
 
+def NegOp : Filskalang_Op<"neg"> {
+  let summary = "negate operation";
+  let description = [{
+    The "filskalang.neg" builtin operation represents the "neg" instruction
+  }];
+
+  let arguments = (ins F64:$arg);
+  let results = (outs F64);
+}
+
 def PrtOp : Filskalang_Op<"prt"> {
   let summary = "print operation";
   let description = [{
@@ -153,6 +163,28 @@ def SubprogramOp : Filskalang_Op<"subprogram", [
   }];
 
   let skipDefaultBuilders = 1;
+}
+
+// meta operator
+
+def MetaSetOp : Filskalang_Op<"metaset"> {
+  let summary = "meta set operation";
+  let description = [{
+    The "filskalang.metaset" operation is used to push back the caluculation result to register `m`.
+  }];
+
+  let arguments = (ins F64:$value, SymbolNameAttr:$subprogramName);
+}
+
+// dummy operator
+
+def DummyTerminatorOp : Filskalang_Op<"dummyterminator", [Terminator]> {
+  let summary = "dummy terminator operation";
+  let description = [{
+    The "filskalang.dummyterminator" operation is a placeholder operator at the end of each subprogram.
+    It is only used to satisfy the terminator constraint in an MLIR block;
+    the block must have one and only one terminator operator at the end.
+  }];
 }
 
 #endif
