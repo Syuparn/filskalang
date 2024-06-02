@@ -75,7 +75,7 @@ TEST(CodeGenTest, MultipleSubprograms) {
     "filskalang.dummyterminator"() : () -> ()
   }) : () -> ()
   "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
-    %0 = "filskalang.memory"() <{name = "main"}> : () -> f64
+    %0 = "filskalang.register"() <{name = "main"}> : () -> f64
     "filskalang.prt"(%0) : (f64) -> ()
     "filskalang.dummyterminator"() : () -> ()
   }) : () -> ()
@@ -124,7 +124,7 @@ TEST(CodeGenTest, Neg) {
     "filskalang.dummyterminator"() : () -> ()
   }) : () -> ()
   "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
-    %0 = "filskalang.memory"() <{name = "main"}> : () -> f64
+    %0 = "filskalang.register"() <{name = "main"}> : () -> f64
     %1 = "filskalang.neg"(%0) : (f64) -> f64
     "filskalang.metaset"(%1) <{subprogramName = "main"}> : (f64) -> ()
     "filskalang.dummyterminator"() : () -> ()
@@ -147,7 +147,7 @@ TEST(CodeGenTest, Prt) {
     "filskalang.dummyterminator"() : () -> ()
   }) : () -> ()
   "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
-    %0 = "filskalang.memory"() <{name = "main"}> : () -> f64
+    %0 = "filskalang.register"() <{name = "main"}> : () -> f64
     "filskalang.prt"(%0) : (f64) -> ()
     "filskalang.dummyterminator"() : () -> ()
   }) : () -> ()
@@ -197,7 +197,7 @@ TEST(CodeGenTest, MultipleInstructions) {
   }) : () -> ()
   "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
     "filskalang.set"() <{subprogramName = "main", value = 1.000000e+01 : f64}> : () -> ()
-    %0 = "filskalang.memory"() <{name = "main"}> : () -> f64
+    %0 = "filskalang.register"() <{name = "main"}> : () -> f64
     "filskalang.prt"(%0) : (f64) -> ()
     "filskalang.dummyterminator"() : () -> ()
   }) : () -> ()

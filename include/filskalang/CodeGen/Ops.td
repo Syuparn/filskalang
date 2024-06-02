@@ -28,11 +28,11 @@ def Filskalang_Dialect : Dialect {
 class Filskalang_Op<string mnemonic, list<Trait> traits = []> :
     Op<Filskalang_Dialect, mnemonic, traits>;
 
-// Memory Operations
-def MemoryOp : Filskalang_Op<"memory"> {
-  let summary = "memory operation";
+// Register Operations
+def RegisterOp : Filskalang_Op<"register"> {
+  let summary = "register operation";
   let description = [{
-    The "filskalang.memory" builtin operation represents the value in the memory `x`, `y`, `z`, or `m`.
+    The "filskalang.register" builtin operation represents the value in the register `x`, `y`, `z`, or `m`.
   }];
 
   let arguments = (ins SymbolNameAttr:$name);

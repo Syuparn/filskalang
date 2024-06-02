@@ -176,19 +176,19 @@ public:
   }
 };
 
-class MemoryOpLowering : public mlir::ConversionPattern {
+class RegisterOpLowering : public mlir::ConversionPattern {
 public:
-  explicit MemoryOpLowering(mlir::MLIRContext *Context)
-      : ConversionPattern(mlir::filskalang::MemoryOp::getOperationName(), 1,
+  explicit RegisterOpLowering(mlir::MLIRContext *Context)
+      : ConversionPattern(mlir::filskalang::RegisterOp::getOperationName(), 1,
                           Context) {}
 
   mlir::LogicalResult
   matchAndRewrite(mlir::Operation *Op, mlir::ArrayRef<mlir::Value> Operands,
                   mlir::ConversionPatternRewriter &Rewriter) const override {
     auto Loc = Op->getLoc();
-    auto MemoryOp = mlir::cast<mlir::filskalang::MemoryOp>(Op);
+    auto RegisterOp = mlir::cast<mlir::filskalang::RegisterOp>(Op);
 
-    auto MemoryPointer = SubprogramMemory.at(MemoryOp.getName().str());
+    auto MemoryPointer = SubprogramMemory.at(RegisterOp.getName().str());
     auto LoadOp = Rewriter.create<mlir::LLVM::LoadOp>(
         Loc, Rewriter.getF64Type(), MemoryPointer);
 
@@ -361,7 +361,7 @@ void FilskalangToLLVMLoweringPass::runOnOperation() {
   Patterns.add<HltOpLowering>(&getContext());
   Patterns.add<PrtOpLowering>(&getContext());
   Patterns.add<SetOpLowering>(&getContext());
-  Patterns.add<MemoryOpLowering>(&getContext());
+  Patterns.add<RegisterOpLowering>(&getContext());
   Patterns.add<MetaSetOpLowering>(&getContext());
   Patterns.add<DummyTerminatorOpLowering>(&getContext());
 

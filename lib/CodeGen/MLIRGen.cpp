@@ -123,7 +123,7 @@ private:
                   llvm::StringRef SubprogramName) {
     mlir::Location Loc = Instruction.getLocation().getLocation(Builder);
 
-    auto Memory = Builder.create<mlir::filskalang::MemoryOp>(
+    auto Memory = Builder.create<mlir::filskalang::RegisterOp>(
         Loc, Builder.getF64Type(), Builder.getStringAttr(SubprogramName));
 
     auto NegOp = Builder.create<mlir::filskalang::NegOp>(
@@ -137,7 +137,7 @@ private:
                   llvm::StringRef SubprogramName) {
     mlir::Location Loc = Instruction.getLocation().getLocation(Builder);
 
-    auto Memory = Builder.create<mlir::filskalang::MemoryOp>(
+    auto Memory = Builder.create<mlir::filskalang::RegisterOp>(
         Loc, Builder.getF64Type(), Builder.getStringAttr(SubprogramName));
 
     Builder.create<mlir::filskalang::PrtOp>(Loc, Memory);
