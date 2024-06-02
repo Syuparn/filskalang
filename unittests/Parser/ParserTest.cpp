@@ -47,18 +47,6 @@ TEST(ParserTest, Simple) {
 
 // nullary instructions
 
-TEST(ParserTest, Prt) {
-  auto Src = R"(
-    { main
-      prt
-    }
-    )";
-
-  auto Expected = "(main (OP_PRT) ) ";
-
-  RunTest(Src, Expected);
-}
-
 TEST(ParserTest, Hlt) {
   auto Src = R"(
     { main
@@ -67,6 +55,30 @@ TEST(ParserTest, Hlt) {
     )";
 
   auto Expected = "(main (OP_HLT) ) ";
+
+  RunTest(Src, Expected);
+}
+
+TEST(ParserTest, Neg) {
+  auto Src = R"(
+    { main
+      neg
+    }
+    )";
+
+  auto Expected = "(main (OP_NEG) ) ";
+
+  RunTest(Src, Expected);
+}
+
+TEST(ParserTest, Prt) {
+  auto Src = R"(
+    { main
+      prt
+    }
+    )";
+
+  auto Expected = "(main (OP_PRT) ) ";
 
   RunTest(Src, Expected);
 }

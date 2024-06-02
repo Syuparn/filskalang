@@ -72,10 +72,10 @@ bool Parser::parseSubprogram(std::vector<ast::Subprogram *> &Subprograms) {
 bool Parser::parseInstruction(std::vector<ast::Instruction *> &Instructions) {
   // TODO: skip until all operators
   auto _errorhandler = [this] {
-    return skipUntil(tok::kw_hlt, tok::kw_prt, tok::kw_set);
+    return skipUntil(tok::kw_hlt, tok::kw_neg, tok::kw_prt, tok::kw_set);
   };
 
-  if (Tok.isOneOf(tok::kw_hlt, tok::kw_prt)) {
+  if (Tok.isOneOf(tok::kw_hlt, tok::kw_neg, tok::kw_prt)) {
     if (parseNullaryInstruction(Instructions)) {
       return _errorhandler();
     };

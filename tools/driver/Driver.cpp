@@ -8,12 +8,13 @@
 #include "filskalang/Basic/Diagnostic.h"
 #include "filskalang/Basic/Version.h"
 #include "filskalang/CodeGen/Dialect.h"
+#include "filskalang/CodeGen/LowerToArith.h"
 #include "filskalang/CodeGen/LowerToLLVM.h"
 #include "filskalang/CodeGen/MLIRGen.h"
 #include "filskalang/Lexer/Lexer.h"
 #include "filskalang/Parser/Parser.h"
 #include "filskalang/Sema/Sema.h"
-#include "mlir/Dialect/Affine/Passes.h"
+#include "mlir/Conversion/ArithToLLVM/ArithToLLVM.h"
 #include "mlir/Dialect/LLVMIR/Transforms/Passes.h"
 #include "mlir/ExecutionEngine/ExecutionEngine.h"
 #include "mlir/ExecutionEngine/OptUtils.h"
@@ -65,6 +66,9 @@ int initLowering(mlir::OwningOpRef<mlir::ModuleOp> &Module) {
         << "Failed apply pass manager options from command line options\n";
     return 4;
   }
+
+  // lowering pass
+  PM.addPass(mlir::filskalang::createLowerToArithPass());
 
   // Finish lowering the toy IR to the LLVM dialect.
   PM.addPass(mlir::filskalang::createLowerToLLVMPass());

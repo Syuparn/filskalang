@@ -15,8 +15,8 @@
 #include "mlir/IR/BuiltinAttributes.h"
 #include "mlir/IR/BuiltinOps.h"
 #include "mlir/IR/Location.h"
+#include "llvm/ADT/StringRef.h"
 #include "llvm/Support/Casting.h"
-#include <llvm-18/llvm/ADT/StringRef.h>
 
 class MLIRGenImpl {
 
@@ -43,7 +43,11 @@ public:
 
     // program body
     mlir::Block &EntryBlock = ProgramOp.front();
+    // HACK: add dummy terminator at the end to satisfy the terminator
+    // constraint in a mlir block; the block must have one and only one
+    // terminator operator at the end.
     Builder.setInsertionPointToStart(&EntryBlock);
+    Builder.create<mlir::filskalang::DummyTerminatorOp>(Loc);
 
     for (filskalang::ast::Subprogram *Subprogram : Program.getSubprograms()) {
       mlirGen(*Subprogram);
@@ -53,8 +57,7 @@ public:
   }
 
 private:
-  mlir::filskalang::SubprogramOp
-  mlirGen(filskalang::ast::Subprogram &Subprogram) {
+  void mlirGen(filskalang::ast::Subprogram &Subprogram) {
     mlir::Location Loc = Subprogram.getLocation().getLocation(Builder);
 
     // create dummy parameters
@@ -79,12 +82,16 @@ private:
         auto Nullary =
             llvm::cast<filskalang::ast::NullaryInstruction>(Instruction);
         switch (Nullary->getOperator()) {
-        case filskalang::ast::NullaryInstruction::OP_PRT: {
-          mlirGenPrt(*Nullary, Subprogram.getName());
-          break;
-        }
         case filskalang::ast::NullaryInstruction::OP_HLT: {
           mlirGenHlt(*Nullary);
+          break;
+        }
+        case filskalang::ast::NullaryInstruction::OP_NEG: {
+          mlirGenNeg(*Nullary, Subprogram.getName());
+          break;
+        }
+        case filskalang::ast::NullaryInstruction::OP_PRT: {
+          mlirGenPrt(*Nullary, Subprogram.getName());
           break;
         }
         }
@@ -101,34 +108,48 @@ private:
       }
     }
 
-    return Sub;
+    // HACK: add dummy terminator at the end to satisfy the terminator
+    // constraint in a mlir block; the block must have one and only one
+    // terminator operator at the end.
+    Builder.create<mlir::filskalang::DummyTerminatorOp>(Loc);
   }
 
-  mlir::filskalang::HltOp
-  mlirGenHlt(filskalang::ast::NullaryInstruction &Instruction) {
+  void mlirGenHlt(filskalang::ast::NullaryInstruction &Instruction) {
     mlir::Location Loc = Instruction.getLocation().getLocation(Builder);
-    return Builder.create<mlir::filskalang::HltOp>(Loc);
+    Builder.create<mlir::filskalang::HltOp>(Loc);
   }
 
-  mlir::filskalang::PrtOp
-  mlirGenPrt(filskalang::ast::NullaryInstruction &Instruction,
-             llvm::StringRef SubprogramName) {
+  void mlirGenNeg(filskalang::ast::NullaryInstruction &Instruction,
+                  llvm::StringRef SubprogramName) {
     mlir::Location Loc = Instruction.getLocation().getLocation(Builder);
 
     auto Memory = Builder.create<mlir::filskalang::MemoryOp>(
         Loc, Builder.getF64Type(), Builder.getStringAttr(SubprogramName));
 
-    return Builder.create<mlir::filskalang::PrtOp>(Loc, Memory);
+    auto NegOp = Builder.create<mlir::filskalang::NegOp>(
+        Loc, Builder.getF64Type(), Memory);
+    // add setOp to store the result to the register `m` again
+    Builder.create<mlir::filskalang::MetaSetOp>(
+        Loc, NegOp, Builder.getStringAttr(SubprogramName));
   }
 
-  mlir::filskalang::SetOp
-  mlirGenSet(filskalang::ast::UnaryInstruction &Instruction,
-             llvm::StringRef SubprogramName) {
+  void mlirGenPrt(filskalang::ast::NullaryInstruction &Instruction,
+                  llvm::StringRef SubprogramName) {
+    mlir::Location Loc = Instruction.getLocation().getLocation(Builder);
+
+    auto Memory = Builder.create<mlir::filskalang::MemoryOp>(
+        Loc, Builder.getF64Type(), Builder.getStringAttr(SubprogramName));
+
+    Builder.create<mlir::filskalang::PrtOp>(Loc, Memory);
+  }
+
+  void mlirGenSet(filskalang::ast::UnaryInstruction &Instruction,
+                  llvm::StringRef SubprogramName) {
     auto Type = Builder.getF64Type();
     mlir::Location Loc = Instruction.getLocation().getLocation(Builder);
     auto Attr =
         mlir::FloatAttr::get(Type, Instruction.getOperand()->getValue());
-    return Builder.create<mlir::filskalang::SetOp>(
+    Builder.create<mlir::filskalang::SetOp>(
         Loc, Attr, Builder.getStringAttr(SubprogramName));
   }
 };

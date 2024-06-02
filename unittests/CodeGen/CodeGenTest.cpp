@@ -45,14 +45,14 @@ TEST(CodeGenTest, Simple) {
     { main }
     )";
 
-  auto Expected = R"("builtin.module"() ({
+  auto Expected = R"(module {
   "filskalang.program"() <{function_type = () -> (), sym_name = "program"}> ({
-  ^bb0:
+    "filskalang.dummyterminator"() : () -> ()
   }) : () -> ()
   "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
-  ^bb0:
+    "filskalang.dummyterminator"() : () -> ()
   }) : () -> ()
-}) : () -> ()
+}
 )";
 
   RunTest(Src, Expected);
@@ -70,18 +70,20 @@ TEST(CodeGenTest, MultipleSubprograms) {
     }
     )";
 
-  auto Expected = R"("builtin.module"() ({
+  auto Expected = R"(module {
   "filskalang.program"() <{function_type = () -> (), sym_name = "program"}> ({
-  ^bb0:
+    "filskalang.dummyterminator"() : () -> ()
   }) : () -> ()
   "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
     %0 = "filskalang.memory"() <{name = "main"}> : () -> f64
     "filskalang.prt"(%0) : (f64) -> ()
+    "filskalang.dummyterminator"() : () -> ()
   }) : () -> ()
   "filskalang.subprogram"() <{function_type = () -> (), sym_name = "another"}> ({
     "filskalang.set"() <{subprogramName = "another", value = 1.000000e+01 : f64}> : () -> ()
+    "filskalang.dummyterminator"() : () -> ()
   }) : () -> ()
-}) : () -> ()
+}
 )";
 
   RunTest(Src, Expected);
@@ -96,14 +98,38 @@ TEST(CodeGenTest, Hlt) {
     }
     )";
 
-  auto Expected = R"("builtin.module"() ({
+  auto Expected = R"(module {
   "filskalang.program"() <{function_type = () -> (), sym_name = "program"}> ({
-  ^bb0:
+    "filskalang.dummyterminator"() : () -> ()
   }) : () -> ()
   "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
     "filskalang.hlt"() : () -> ()
+    "filskalang.dummyterminator"() : () -> ()
   }) : () -> ()
-}) : () -> ()
+}
+)";
+
+  RunTest(Src, Expected);
+}
+
+TEST(CodeGenTest, Neg) {
+  auto Src = R"(
+    { main
+      neg
+    }
+    )";
+
+  auto Expected = R"(module {
+  "filskalang.program"() <{function_type = () -> (), sym_name = "program"}> ({
+    "filskalang.dummyterminator"() : () -> ()
+  }) : () -> ()
+  "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
+    %0 = "filskalang.memory"() <{name = "main"}> : () -> f64
+    %1 = "filskalang.neg"(%0) : (f64) -> f64
+    "filskalang.metaset"(%1) <{subprogramName = "main"}> : (f64) -> ()
+    "filskalang.dummyterminator"() : () -> ()
+  }) : () -> ()
+}
 )";
 
   RunTest(Src, Expected);
@@ -116,15 +142,16 @@ TEST(CodeGenTest, Prt) {
     }
     )";
 
-  auto Expected = R"("builtin.module"() ({
+  auto Expected = R"(module {
   "filskalang.program"() <{function_type = () -> (), sym_name = "program"}> ({
-  ^bb0:
+    "filskalang.dummyterminator"() : () -> ()
   }) : () -> ()
   "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
     %0 = "filskalang.memory"() <{name = "main"}> : () -> f64
     "filskalang.prt"(%0) : (f64) -> ()
+    "filskalang.dummyterminator"() : () -> ()
   }) : () -> ()
-}) : () -> ()
+}
 )";
 
   RunTest(Src, Expected);
@@ -139,14 +166,15 @@ TEST(CodeGenTest, Set) {
     }
     )";
 
-  auto Expected = R"("builtin.module"() ({
+  auto Expected = R"(module {
   "filskalang.program"() <{function_type = () -> (), sym_name = "program"}> ({
-  ^bb0:
+    "filskalang.dummyterminator"() : () -> ()
   }) : () -> ()
   "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
     "filskalang.set"() <{subprogramName = "main", value = 1.000000e+01 : f64}> : () -> ()
+    "filskalang.dummyterminator"() : () -> ()
   }) : () -> ()
-}) : () -> ()
+}
 )";
 
   RunTest(Src, Expected);
@@ -163,16 +191,17 @@ TEST(CodeGenTest, MultipleInstructions) {
     )";
 
   auto Expected =
-      R"("builtin.module"() ({
+      R"(module {
   "filskalang.program"() <{function_type = () -> (), sym_name = "program"}> ({
-  ^bb0:
+    "filskalang.dummyterminator"() : () -> ()
   }) : () -> ()
   "filskalang.subprogram"() <{function_type = () -> (), sym_name = "main"}> ({
     "filskalang.set"() <{subprogramName = "main", value = 1.000000e+01 : f64}> : () -> ()
     %0 = "filskalang.memory"() <{name = "main"}> : () -> f64
     "filskalang.prt"(%0) : (f64) -> ()
+    "filskalang.dummyterminator"() : () -> ()
   }) : () -> ()
-}) : () -> ()
+}
 )";
 
   RunTest(Src, Expected);
